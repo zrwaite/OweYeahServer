@@ -1,4 +1,4 @@
-module github.com/zrwaite/GreysonServer
+module github.com/zrwaite/OweMate
 
 go 1.18
 

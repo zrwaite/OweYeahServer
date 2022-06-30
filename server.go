@@ -7,8 +7,8 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/zrwaite/GreysonServer/graph"
-	"github.com/zrwaite/GreysonServer/graph/generated"
+	"github.com/zrwaite/OweMate/graph"
+	"github.com/zrwaite/OweMate/graph/generated"
 )
 
 const defaultPort = "8080"

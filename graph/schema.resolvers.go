@@ -7,8 +7,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/zrwaite/GreysonServer/graph/generated"
-	"github.com/zrwaite/GreysonServer/graph/model"
+	"github.com/zrwaite/OweMate/graph/generated"
+	"github.com/zrwaite/OweMate/graph/model"
 )
 
 func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
