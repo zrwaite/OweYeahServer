@@ -4,7 +4,8 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"dev": "nodemon --watch './**/*.go' --signal SIGTERM --exec 'go' run server.go"
+		"dev": "nodemon --watch './**/*.go' --signal SIGTERM --exec 'go' run server.go",
+		"generate": "go run github.com/99designs/gqlgen generate"
 	},
 	"keywords": [],
 	"author": "",

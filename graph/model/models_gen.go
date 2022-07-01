@@ -2,19 +2,68 @@
 
 package model
 
-type NewTodo struct {
-	Text   string `json:"text"`
-	UserID string `json:"userId"`
+type Invoice struct {
+	ID           string  `json:"id"`
+	CreatedByID  string  `json:"created_by_id"`
+	CreatedBy    *User   `json:"created_by"`
+	InvoicedToID string  `json:"invoiced_to_id"`
+	InvoicedTo   *User   `json:"invoiced_to"`
+	Amount       float64 `json:"amount"`
+	CreatedAt    string  `json:"created_at"`
 }
 
-type Todo struct {
-	ID   string `json:"id"`
-	Text string `json:"text"`
-	Done bool   `json:"done"`
-	User *User  `json:"user"`
+type InvoiceInput struct {
+	CreatedByID  string  `json:"created_by_id"`
+	InvoicedToID string  `json:"invoiced_to_id"`
+	Amount       float64 `json:"amount"`
+}
+
+type InvoiceResult struct {
+	Success bool      `json:"success"`
+	Invoice *Invoice  `json:"invoice"`
+	Errors  []*string `json:"errors"`
+}
+
+type Payment struct {
+	ID          string  `json:"id"`
+	CreatedByID string  `json:"created_by_id"`
+	CreatedBy   *User   `json:"created_by"`
+	PaidToID    string  `json:"paid_to_id"`
+	PaidTo      *User   `json:"paid_to"`
+	Amount      float64 `json:"amount"`
+	CreatedAt   string  `json:"created_at"`
+}
+
+type PaymentResult struct {
+	Success bool      `json:"success"`
+	Payment *Payment  `json:"payment"`
+	Errors  []*string `json:"errors"`
+}
+
+type Result struct {
+	Success bool      `json:"success"`
+	Errors  []*string `json:"errors"`
 }
 
 type User struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID          string     `json:"id"`
+	Username    string     `json:"username"`
+	Hash        *string    `json:"hash"`
+	DisplayName *string    `json:"display_name"`
+	CreatedAt   string     `json:"created_at"`
+	InvoiceIds  []*string  `json:"invoice_ids"`
+	Invoices    []*Invoice `json:"invoices"`
+	PaymentIds  []*string  `json:"payment_ids"`
+	Payments    []*Payment `json:"payments"`
+}
+
+type UserInput struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type UserResult struct {
+	Success bool      `json:"success"`
+	User    *User     `json:"user"`
+	Errors  []*string `json:"errors"`
 }

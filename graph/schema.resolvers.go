@@ -11,11 +11,23 @@ import (
 	"github.com/zrwaite/OweMate/graph/model"
 )
 
-func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
+func (r *mutationResolver) CreateUser(ctx context.Context, input model.UserInput) (*model.UserResult, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
+func (r *mutationResolver) Login(ctx context.Context, input model.UserInput) (*model.UserResult, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *mutationResolver) UpdateUser(ctx context.Context, username string) (*model.UserResult, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *mutationResolver) DeleteUser(ctx context.Context, username string) (*model.Result, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) User(ctx context.Context, username string) (*model.UserResult, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 

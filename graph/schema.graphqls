@@ -1,0 +1,76 @@
+type User {
+	id: ID!
+	username: String!
+	hash: String
+	display_name: String
+	created_at: String!
+	invoice_ids: [ID]!
+	invoices: [Invoice]!
+	payment_ids: [ID]!
+	payments: [Payment]!
+}
+
+type UserResult {
+	success: Boolean!
+	user: User
+	errors: [String]
+}
+
+type Invoice {
+	id: ID!
+	created_by_id: ID!
+	created_by: User!
+	invoiced_to_id: ID!
+	invoiced_to: User!
+	amount: Float!
+	created_at: String!
+}
+
+type InvoiceResult {
+	success: Boolean!
+	invoice: Invoice
+	errors: [String]
+}
+
+type Payment {
+	id: ID!
+	created_by_id: ID!
+	created_by: User!
+	paid_to_id: ID!
+	paid_to: User!
+	amount: Float!
+	created_at: String!
+}
+
+type PaymentResult {
+	success: Boolean!
+	payment: Payment
+	errors: [String]
+}
+
+type Result {
+	success: Boolean!
+	errors: [String]
+}
+
+input UserInput {
+	username: String!
+	password: String!
+}
+
+input InvoiceInput {
+	created_by_id: ID!
+	invoiced_to_id: ID!
+	amount: Float!
+}
+
+type Query {
+	user(username: String!): UserResult
+}
+
+type Mutation {
+	createUser(input: UserInput!): UserResult!
+	login(input: UserInput!): UserResult!
+	updateUser(username: String!): UserResult!
+	deleteUser(username: String!): Result!
+}
