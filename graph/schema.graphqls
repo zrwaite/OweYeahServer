@@ -4,16 +4,16 @@ type User {
 	hash: String
 	display_name: String
 	created_at: String!
-	invoice_ids: [ID]!
-	invoices: [Invoice]!
-	payment_ids: [ID]!
-	payments: [Payment]!
+	invoice_ids: [ID!]!
+	invoices: [Invoice!]!
+	payment_ids: [ID!]!
+	payments: [Payment!]!
 }
 
 type UserResult {
 	success: Boolean!
 	user: User
-	errors: [String]
+	errors: [String!]
 }
 
 type Invoice {
@@ -29,7 +29,7 @@ type Invoice {
 type InvoiceResult {
 	success: Boolean!
 	invoice: Invoice
-	errors: [String]
+	errors: [String!]
 }
 
 type Payment {
@@ -45,12 +45,12 @@ type Payment {
 type PaymentResult {
 	success: Boolean!
 	payment: Payment
-	errors: [String]
+	errors: [String!]
 }
 
 type Result {
 	success: Boolean!
-	errors: [String]
+	errors: [String!]
 }
 
 input UserInput {

@@ -8,6 +8,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/joho/godotenv"
+	"github.com/zrwaite/OweMate/database"
 	"github.com/zrwaite/OweMate/graph"
 	"github.com/zrwaite/OweMate/graph/generated"
 )
@@ -16,13 +17,14 @@ const defaultPort = "8080"
 
 func main() {
 	godotenv.Load(".env")
+	database.ConnectToMongoDB()
+	database.InitializeDatabase()
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
 	}
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
-
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", srv)
 

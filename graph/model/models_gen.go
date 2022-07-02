@@ -19,9 +19,9 @@ type InvoiceInput struct {
 }
 
 type InvoiceResult struct {
-	Success bool      `json:"success"`
-	Invoice *Invoice  `json:"invoice"`
-	Errors  []*string `json:"errors"`
+	Success bool     `json:"success"`
+	Invoice *Invoice `json:"invoice"`
+	Errors  []string `json:"errors"`
 }
 
 type Payment struct {
@@ -35,14 +35,14 @@ type Payment struct {
 }
 
 type PaymentResult struct {
-	Success bool      `json:"success"`
-	Payment *Payment  `json:"payment"`
-	Errors  []*string `json:"errors"`
+	Success bool     `json:"success"`
+	Payment *Payment `json:"payment"`
+	Errors  []string `json:"errors"`
 }
 
 type Result struct {
-	Success bool      `json:"success"`
-	Errors  []*string `json:"errors"`
+	Success bool     `json:"success"`
+	Errors  []string `json:"errors"`
 }
 
 type User struct {
@@ -51,9 +51,9 @@ type User struct {
 	Hash        *string    `json:"hash"`
 	DisplayName *string    `json:"display_name"`
 	CreatedAt   string     `json:"created_at"`
-	InvoiceIds  []*string  `json:"invoice_ids"`
+	InvoiceIds  []string   `json:"invoice_ids"`
 	Invoices    []*Invoice `json:"invoices"`
-	PaymentIds  []*string  `json:"payment_ids"`
+	PaymentIds  []string   `json:"payment_ids"`
 	Payments    []*Payment `json:"payments"`
 }
 
@@ -63,7 +63,7 @@ type UserInput struct {
 }
 
 type UserResult struct {
-	Success bool      `json:"success"`
-	User    *User     `json:"user"`
-	Errors  []*string `json:"errors"`
+	Success bool     `json:"success"`
+	User    *User    `json:"user"`
+	Errors  []string `json:"errors"`
 }

@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/zrwaite/OweMate/database"
 	"github.com/zrwaite/OweMate/graph/generated"
 	"github.com/zrwaite/OweMate/graph/model"
 )
@@ -28,7 +29,26 @@ func (r *mutationResolver) DeleteUser(ctx context.Context, username string) (*mo
 }
 
 func (r *queryResolver) User(ctx context.Context, username string) (*model.UserResult, error) {
-	panic(fmt.Errorf("not implemented"))
+	user, status := database.GetUser(username)
+	var userResult *model.UserResult
+	if status == 200 {
+		userResult = &model.UserResult{
+			User:    user,
+			Success: true,
+		}
+	} else if status == 404 {
+		userResult = &model.UserResult{
+			Success: false,
+			Errors:  []string{"User not found"},
+		}
+	} else if status == 400 {
+		userResult = &model.UserResult{
+			Success: false,
+			Errors:  []string{"Something went wrong"},
+		}
+	}
+
+	return userResult, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.
