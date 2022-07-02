@@ -18,7 +18,7 @@ const defaultPort = "8080"
 func main() {
 	godotenv.Load(".env")
 	database.ConnectToMongoDB()
-	database.InitializeDatabase()
+	// database.InitializeDatabase()
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort

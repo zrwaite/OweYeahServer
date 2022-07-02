@@ -12,11 +12,22 @@ import (
 	"github.com/zrwaite/OweMate/graph/model"
 )
 
-func (r *mutationResolver) CreateUser(ctx context.Context, input model.UserInput) (*model.UserResult, error) {
-	panic(fmt.Errorf("not implemented"))
+func (r *mutationResolver) CreateUser(ctx context.Context, input model.UserInput) (*model.UserAuthResult, error) {
+	errors, token := database.CreateUser(&input)
+	if len(errors) > 0 {
+		return &model.UserAuthResult{
+			Success: false,
+			Errors:  errors,
+		}, nil
+	} else {
+		return &model.UserAuthResult{
+			Success: true,
+			Token:   token,
+		}, nil
+	}
 }
 
-func (r *mutationResolver) Login(ctx context.Context, input model.UserInput) (*model.UserResult, error) {
+func (r *mutationResolver) Login(ctx context.Context, input model.UserInput) (*model.UserAuthResult, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 

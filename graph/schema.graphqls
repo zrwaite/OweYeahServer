@@ -2,7 +2,7 @@ type User {
 	id: ID!
 	username: String!
 	hash: String
-	display_name: String
+	display_name: String!
 	created_at: String!
 	invoice_ids: [ID!]!
 	invoices: [Invoice!]!
@@ -13,6 +13,12 @@ type User {
 type UserResult {
 	success: Boolean!
 	user: User
+	errors: [String!]
+}
+type UserAuthResult {
+	success: Boolean!
+	user: User
+	token: String!
 	errors: [String!]
 }
 
@@ -69,8 +75,8 @@ type Query {
 }
 
 type Mutation {
-	createUser(input: UserInput!): UserResult!
-	login(input: UserInput!): UserResult!
+	createUser(input: UserInput!): UserAuthResult!
+	login(input: UserInput!): UserAuthResult!
 	updateUser(username: String!): UserResult!
 	deleteUser(username: String!): Result!
 }
