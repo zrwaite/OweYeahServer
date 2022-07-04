@@ -17,6 +17,7 @@ func GetUser(username string) (user *model.User, status int) {
 	}
 	// opts := options.FindOne().SetProjection(projection)
 	cursor := mongoDatabase.Collection("users").FindOne(context.TODO(), CreateUsernameFilter(username))
+	// fmt.Printf("%+v\n", cursor)
 	if err := cursor.Decode(user); err != nil {
 		if err.Error() == "mongo: no documents in result" {
 			status = 404
