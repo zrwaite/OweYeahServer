@@ -1,3 +1,3 @@
-# Greyson Server
+# Owemate
 
 Server for Greyson's app project
