@@ -1,7 +1,7 @@
 type User {
 	id: ID!
 	username: String!
-	hash: String
+	hash: String!
 	display_name: String!
 	created_at: String!
 	invoice_ids: [ID!]!

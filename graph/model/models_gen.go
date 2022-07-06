@@ -48,7 +48,7 @@ type Result struct {
 type User struct {
 	ID          string     `bson:"id"`
 	Username    string     `bson:"username"`
-	Hash        *string    `bson:"hash"`
+	Hash        string     `bson:"hash"`
 	DisplayName string     `bson:"display_name"`
 	CreatedAt   string     `bson:"created_at"`
 	InvoiceIds  []string   `bson:"invoice_ids"`

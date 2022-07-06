@@ -7,6 +7,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/zrwaite/OweMate/auth"
+	"github.com/zrwaite/OweMate/auth/tokens"
 	"github.com/zrwaite/OweMate/database"
 	"github.com/zrwaite/OweMate/graph/generated"
 	"github.com/zrwaite/OweMate/graph/model"
@@ -28,7 +30,32 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.UserInput
 }
 
 func (r *mutationResolver) Login(ctx context.Context, input model.UserInput) (*model.UserAuthResult, error) {
-	panic(fmt.Errorf("not implemented"))
+	user, status := database.GetUser(input.Username)
+	errors := []string{}
+	if status == 404 {
+		errors = append(errors, "User not found")
+	} else if status == 400 {
+		errors = append(errors, "Something went wrong")
+	} else {
+		if !auth.CheckPasswordHash(input.Password, user.Hash) {
+			errors = append(errors, "Incorrect password")
+		} else {
+			token, tokenSuccess := tokens.EncodeToken(input.Username)
+			if tokenSuccess {
+				return &model.UserAuthResult{
+					Success: true,
+					Token:   token,
+					User:    user,
+				}, nil
+			} else {
+				errors = append(errors, "Failed to create token")
+			}
+		}
+	}
+	return &model.UserAuthResult{
+		Success: false,
+		Errors:  errors,
+	}, nil
 }
 
 func (r *mutationResolver) UpdateUser(ctx context.Context, username string) (*model.UserResult, error) {
