@@ -24,11 +24,11 @@ func (r *mutationResolver) DeleteUser(ctx context.Context, username string) (*mo
 	return database.DeleteUser(ctx, username), nil
 }
 
-func (r *mutationResolver) CreateInvoice(ctx context.Context, input model.InvoiceInput) (*model.InvoiceResult, error) {
+func (r *mutationResolver) CreateInvoice(ctx context.Context, input model.InvoiceOrPaymentInput) (*model.InvoiceOrPaymentResult, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *mutationResolver) CreatePayment(ctx context.Context, input model.PaymentInput) (*model.PaymentResult, error) {
+func (r *mutationResolver) CreatePayment(ctx context.Context, input model.InvoiceOrPaymentInput) (*model.InvoiceOrPaymentResult, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 

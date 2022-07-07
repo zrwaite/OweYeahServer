@@ -5,11 +5,19 @@ type User {
 	display_name: String!
 	created_at: String!
 	invoice_ids: [ID!]!
-	invoices: [Invoice!]!
+	invoices: [InvoiceOrPayment!]!
 	payment_ids: [ID!]!
-	payments: [Payment!]!
-	contact_ids: [ID!]!
-	contacts: [User!]!
+	payments: [InvoiceOrPayment!]!
+	connection_ids: [ID!]!
+	connections: [Connection!]!
+}
+
+type Connection {
+	id: ID!
+	contact_username: String!
+	contact: User!
+	debt: Float!
+	created_at: String!
 }
 
 type UserResult {
@@ -31,35 +39,19 @@ type UserAuthResult {
 	errors: [String!]
 }
 
-type Invoice {
+type InvoiceOrPayment {
 	id: ID!
 	created_by_username: String!
 	created_by: User!
-	invoiced_to_username: String!
-	invoiced_to: User!
+	connection_id: ID!
+	connection: Connection!
 	amount: Float!
 	created_at: String!
 }
 
-type InvoiceResult {
+type InvoiceOrPaymentResult {
 	success: Boolean!
-	invoice: Invoice
-	errors: [String!]
-}
-
-type Payment {
-	id: ID!
-	created_by_username: String!
-	created_by: User!
-	paid_to_username: String!
-	paid_to: User!
-	amount: Float!
-	created_at: String!
-}
-
-type PaymentResult {
-	success: Boolean!
-	payment: Payment
+	invoice: InvoiceOrPayment
 	errors: [String!]
 }
 
@@ -73,15 +65,9 @@ input UserInput {
 	password: String!
 }
 
-input InvoiceInput {
-	created_by_username: ID!
-	invoiced_to_username: ID!
-	amount: Float!
-}
-
-input PaymentInput {
-	created_by_username: ID!
-	paid_to_username: ID!
+input InvoiceOrPaymentInput {
+	created_by_username: String!
+	connection_id: ID!
 	amount: Float!
 }
 
@@ -94,8 +80,8 @@ type Mutation {
 	createUser(input: UserInput!): UserAuthResult!
 	login(input: UserInput!): UserAuthResult!
 	deleteUser(username: String!): Result!
-	createInvoice(input: InvoiceInput!): InvoiceResult!
-	createPayment(input: PaymentInput!): PaymentResult!
+	createInvoice(input: InvoiceOrPaymentInput!): InvoiceOrPaymentResult!
+	createPayment(input: InvoiceOrPaymentInput!): InvoiceOrPaymentResult!
 	addContact(username: String!, contact_username: String!): Result!
 	removeContact(username: String!, contact_username: String!): Result!
 }

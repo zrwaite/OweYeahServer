@@ -2,48 +2,34 @@
 
 package model
 
-type Invoice struct {
-	ID                 string  `bson:"id"`
-	CreatedByUsername  string  `bson:"created_by_username"`
-	CreatedBy          *User   `bson:"created_by"`
-	InvoicedToUsername string  `bson:"invoiced_to_username"`
-	InvoicedTo         *User   `bson:"invoiced_to"`
-	Amount             float64 `bson:"amount"`
-	CreatedAt          string  `bson:"created_at"`
+type Connection struct {
+	ID              string  `bson:"id"`
+	ContactUsername string  `bson:"contact_username"`
+	Contact         *User   `bson:"contact"`
+	Debt            float64 `bson:"debt"`
+	CreatedAt       string  `bson:"created_at"`
 }
 
-type InvoiceInput struct {
-	CreatedByUsername  string  `bson:"created_by_username"`
-	InvoicedToUsername string  `bson:"invoiced_to_username"`
-	Amount             float64 `bson:"amount"`
+type InvoiceOrPayment struct {
+	ID                string      `bson:"id"`
+	CreatedByUsername string      `bson:"created_by_username"`
+	CreatedBy         *User       `bson:"created_by"`
+	ConnectionID      string      `bson:"connection_id"`
+	Connection        *Connection `bson:"connection"`
+	Amount            float64     `bson:"amount"`
+	CreatedAt         string      `bson:"created_at"`
 }
 
-type InvoiceResult struct {
-	Success bool     `bson:"success"`
-	Invoice *Invoice `bson:"invoice"`
-	Errors  []string `bson:"errors"`
-}
-
-type Payment struct {
-	ID                string  `bson:"id"`
+type InvoiceOrPaymentInput struct {
 	CreatedByUsername string  `bson:"created_by_username"`
-	CreatedBy         *User   `bson:"created_by"`
-	PaidToUsername    string  `bson:"paid_to_username"`
-	PaidTo            *User   `bson:"paid_to"`
-	Amount            float64 `bson:"amount"`
-	CreatedAt         string  `bson:"created_at"`
-}
-
-type PaymentInput struct {
-	CreatedByUsername string  `bson:"created_by_username"`
-	PaidToUsername    string  `bson:"paid_to_username"`
+	ConnectionID      string  `bson:"connection_id"`
 	Amount            float64 `bson:"amount"`
 }
 
-type PaymentResult struct {
-	Success bool     `bson:"success"`
-	Payment *Payment `bson:"payment"`
-	Errors  []string `bson:"errors"`
+type InvoiceOrPaymentResult struct {
+	Success bool              `bson:"success"`
+	Invoice *InvoiceOrPayment `bson:"invoice"`
+	Errors  []string          `bson:"errors"`
 }
 
 type Result struct {
@@ -52,17 +38,17 @@ type Result struct {
 }
 
 type User struct {
-	ID          string     `bson:"id"`
-	Username    string     `bson:"username"`
-	Hash        string     `bson:"hash"`
-	DisplayName string     `bson:"display_name"`
-	CreatedAt   string     `bson:"created_at"`
-	InvoiceIds  []string   `bson:"invoice_ids"`
-	Invoices    []*Invoice `bson:"invoices"`
-	PaymentIds  []string   `bson:"payment_ids"`
-	Payments    []*Payment `bson:"payments"`
-	ContactIds  []string   `bson:"contact_ids"`
-	Contacts    []*User    `bson:"contacts"`
+	ID            string              `bson:"id"`
+	Username      string              `bson:"username"`
+	Hash          string              `bson:"hash"`
+	DisplayName   string              `bson:"display_name"`
+	CreatedAt     string              `bson:"created_at"`
+	InvoiceIds    []string            `bson:"invoice_ids"`
+	Invoices      []*InvoiceOrPayment `bson:"invoices"`
+	PaymentIds    []string            `bson:"payment_ids"`
+	Payments      []*InvoiceOrPayment `bson:"payments"`
+	ConnectionIds []string            `bson:"connection_ids"`
+	Connections   []*Connection       `bson:"connections"`
 }
 
 type UserAuthResult struct {
