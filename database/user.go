@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/zrwaite/OweMate/auth"
 	"github.com/zrwaite/OweMate/auth/tokens"
 	"github.com/zrwaite/OweMate/graph/model"
 )
@@ -32,58 +33,116 @@ func GetUser(username string) (user *model.User, status int) {
 	return
 }
 
-func CreateUser(userInput *model.UserInput) (errors []string, token string) {
+func User(ctx context.Context, username string) *model.UserResult {
+	user, status := GetUser(username)
+	var userResult *model.UserResult
+	if status == 200 {
+		userResult = &model.UserResult{
+			User:    user,
+			Success: true,
+		}
+	} else if status == 404 {
+		userResult = &model.UserResult{
+			Success: false,
+			Errors:  []string{"User not found"},
+		}
+	} else if status == 400 {
+		userResult = &model.UserResult{
+			Success: false,
+			Errors:  []string{"Something went wrong"},
+		}
+	}
+	return userResult
+}
+
+func CreateUser(ctx context.Context, input model.UserInput) (userAuthResult *model.UserAuthResult) {
+	userAuthResult = &model.UserAuthResult{}
 	user := &model.User{}
-	_, foundStatus := GetUser(userInput.Username)
+	_, foundStatus := GetUser(input.Username)
 	if foundStatus == 200 {
-		errors = append(errors, "User already exists")
+		userAuthResult.Errors = append(userAuthResult.Errors, "User already exists")
 		return
 	} else if foundStatus == 400 {
-		errors = append(errors, "Something went wrong")
+		userAuthResult.Errors = append(userAuthResult.Errors, "Something went wrong")
 		return
 	}
 
-	err := user.CreateHash(userInput.Password)
-	user.Username = userInput.Username
+	err := user.CreateHash(input.Password)
+	user.Username = input.Username
 	user.CreatedAt = time.Now().Format("2006-01-02")
 	user.InvoiceIds = []string{}
 	user.PaymentIds = []string{}
 	user.DisplayName = ""
 
 	if err != nil {
-		errors = append(errors, "Failed to create hash for user "+user.Username+" ; "+err.Error())
+		userAuthResult.Errors = append(userAuthResult.Errors, "Failed to create hash for user "+user.Username+" ; "+err.Error())
 		return
 	}
 	newUser, insertErr := mongoDatabase.Collection("users").InsertOne(context.TODO(), user)
 	if insertErr != nil {
-		errors = append(errors, "Failed to create user "+user.Username+" ; "+insertErr.Error())
+		userAuthResult.Errors = append(userAuthResult.Errors, "Failed to create user "+user.Username+" ; "+insertErr.Error())
 		return
 	} else {
 		fmt.Println(newUser)
-		success := false
-		token, success = tokens.EncodeToken(user.Username)
+		token, success := tokens.EncodeToken(user.Username)
 		if !success {
-			errors = append(errors, "Failed to create token for user "+user.Username+" ; "+err.Error())
+			userAuthResult.Errors = append(userAuthResult.Errors, "Failed to create token for user "+user.Username+" ; "+err.Error())
 			return
 		}
+		return &model.UserAuthResult{
+			Success: true,
+			Token:   token,
+			User:    user,
+		}
 	}
-	return
 }
 
-func DeleteUser(username string) (errors []string) {
-	_, status := GetUser(username)
+func Login(ctx context.Context, input model.UserInput) *model.UserAuthResult {
+	user, status := GetUser(input.Username)
+	errors := []string{}
 	if status == 404 {
 		errors = append(errors, "User not found")
-		return
 	} else if status == 400 {
 		errors = append(errors, "Something went wrong")
-		return
+	} else {
+		if !auth.CheckPasswordHash(input.Password, user.Hash) {
+			errors = append(errors, "Incorrect password")
+		} else {
+			token, tokenSuccess := tokens.EncodeToken(input.Username)
+			if tokenSuccess {
+				return &model.UserAuthResult{
+					Success: true,
+					Token:   token,
+					User:    user,
+				}
+			} else {
+				errors = append(errors, "Failed to create token")
+			}
+		}
+	}
+	return &model.UserAuthResult{
+		Success: false,
+		Errors:  errors,
+	}
+}
+
+func DeleteUser(ctx context.Context, username string) *model.Result {
+	result := &model.Result{}
+	_, status := GetUser(username)
+	if status == 404 {
+		result.Errors = append(result.Errors, "User not found")
+		return result
+	} else if status == 400 {
+		result.Errors = append(result.Errors, "Something went wrong")
+		return result
 	} else if status == 200 {
 		_, err := mongoDatabase.Collection("users").DeleteOne(context.TODO(), CreateUsernameFilter(username))
 		if err != nil {
-			errors = append(errors, "Failed to delete user "+username+" ; "+err.Error())
-			return
+			result.Errors = append(result.Errors, "Failed to delete user "+username+" ; "+err.Error())
+			return result
 		}
 	}
-	return
+	return &model.Result{
+		Success: true,
+	}
 }
