@@ -8,6 +8,8 @@ type User {
 	invoices: [Invoice!]!
 	payment_ids: [ID!]!
 	payments: [Payment!]!
+	contact_ids: [ID!]!
+	contacts: [User!]!
 }
 
 type UserResult {
@@ -15,6 +17,13 @@ type UserResult {
 	user: User
 	errors: [String!]
 }
+
+type UsersResult {
+	success: Boolean!
+	users: [User!]
+	errors: [String!]
+}
+
 type UserAuthResult {
 	success: Boolean!
 	user: User
@@ -70,13 +79,23 @@ input InvoiceInput {
 	amount: Float!
 }
 
+input PaymentInput {
+	created_by_id: ID!
+	paid_to_id: ID!
+	amount: Float!
+}
+
 type Query {
-	user(username: String!): UserResult
+	user(username: String!): UserResult!
+	getFilteredUsers(partialUsername: String!): UsersResult!
 }
 
 type Mutation {
 	createUser(input: UserInput!): UserAuthResult!
 	login(input: UserInput!): UserAuthResult!
-	updateUser(username: String!): UserResult!
 	deleteUser(username: String!): Result!
+	createInvoice(input: InvoiceInput!): InvoiceResult!
+	createPayment(input: PaymentInput!): PaymentResult!
+	addContact(username: String!, contact_username: String!): Result!
+	removeContact(username: String!, contact_username: String!): Result!
 }

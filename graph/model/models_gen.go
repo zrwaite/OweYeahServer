@@ -34,6 +34,12 @@ type Payment struct {
 	CreatedAt   string  `bson:"created_at"`
 }
 
+type PaymentInput struct {
+	CreatedByID string  `bson:"created_by_id"`
+	PaidToID    string  `bson:"paid_to_id"`
+	Amount      float64 `bson:"amount"`
+}
+
 type PaymentResult struct {
 	Success bool     `bson:"success"`
 	Payment *Payment `bson:"payment"`
@@ -55,6 +61,8 @@ type User struct {
 	Invoices    []*Invoice `bson:"invoices"`
 	PaymentIds  []string   `bson:"payment_ids"`
 	Payments    []*Payment `bson:"payments"`
+	ContactIds  []string   `bson:"contact_ids"`
+	Contacts    []*User    `bson:"contacts"`
 }
 
 type UserAuthResult struct {
@@ -72,5 +80,11 @@ type UserInput struct {
 type UserResult struct {
 	Success bool     `bson:"success"`
 	User    *User    `bson:"user"`
+	Errors  []string `bson:"errors"`
+}
+
+type UsersResult struct {
+	Success bool     `bson:"success"`
+	Users   []*User  `bson:"users"`
 	Errors  []string `bson:"errors"`
 }

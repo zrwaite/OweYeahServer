@@ -69,3 +69,21 @@ func CreateUser(userInput *model.UserInput) (errors []string, token string) {
 	}
 	return
 }
+
+func DeleteUser(username string) (errors []string) {
+	_, status := GetUser(username)
+	if status == 404 {
+		errors = append(errors, "User not found")
+		return
+	} else if status == 400 {
+		errors = append(errors, "Something went wrong")
+		return
+	} else if status == 200 {
+		_, err := mongoDatabase.Collection("users").DeleteOne(context.TODO(), CreateUsernameFilter(username))
+		if err != nil {
+			errors = append(errors, "Failed to delete user "+username+" ; "+err.Error())
+			return
+		}
+	}
+	return
+}
