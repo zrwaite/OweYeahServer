@@ -33,9 +33,9 @@ type UserAuthResult {
 
 type Invoice {
 	id: ID!
-	created_by_id: ID!
+	created_by_username: String!
 	created_by: User!
-	invoiced_to_id: ID!
+	invoiced_to_username: String!
 	invoiced_to: User!
 	amount: Float!
 	created_at: String!
@@ -49,9 +49,9 @@ type InvoiceResult {
 
 type Payment {
 	id: ID!
-	created_by_id: ID!
+	created_by_username: String!
 	created_by: User!
-	paid_to_id: ID!
+	paid_to_username: String!
 	paid_to: User!
 	amount: Float!
 	created_at: String!
@@ -74,14 +74,14 @@ input UserInput {
 }
 
 input InvoiceInput {
-	created_by_id: ID!
-	invoiced_to_id: ID!
+	created_by_username: ID!
+	invoiced_to_username: ID!
 	amount: Float!
 }
 
 input PaymentInput {
-	created_by_id: ID!
-	paid_to_id: ID!
+	created_by_username: ID!
+	paid_to_username: ID!
 	amount: Float!
 }
 

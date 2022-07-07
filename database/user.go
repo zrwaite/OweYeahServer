@@ -78,12 +78,11 @@ func CreateUser(ctx context.Context, input model.UserInput) (userAuthResult *mod
 		userAuthResult.Errors = append(userAuthResult.Errors, "Failed to create hash for user "+user.Username+" ; "+err.Error())
 		return
 	}
-	newUser, insertErr := mongoDatabase.Collection("users").InsertOne(context.TODO(), user)
+	_, insertErr := mongoDatabase.Collection("users").InsertOne(context.TODO(), user)
 	if insertErr != nil {
 		userAuthResult.Errors = append(userAuthResult.Errors, "Failed to create user "+user.Username+" ; "+insertErr.Error())
 		return
 	} else {
-		fmt.Println(newUser)
 		token, success := tokens.EncodeToken(user.Username)
 		if !success {
 			userAuthResult.Errors = append(userAuthResult.Errors, "Failed to create token for user "+user.Username+" ; "+err.Error())

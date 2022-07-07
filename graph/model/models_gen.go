@@ -3,19 +3,19 @@
 package model
 
 type Invoice struct {
-	ID           string  `bson:"id"`
-	CreatedByID  string  `bson:"created_by_id"`
-	CreatedBy    *User   `bson:"created_by"`
-	InvoicedToID string  `bson:"invoiced_to_id"`
-	InvoicedTo   *User   `bson:"invoiced_to"`
-	Amount       float64 `bson:"amount"`
-	CreatedAt    string  `bson:"created_at"`
+	ID                 string  `bson:"id"`
+	CreatedByUsername  string  `bson:"created_by_username"`
+	CreatedBy          *User   `bson:"created_by"`
+	InvoicedToUsername string  `bson:"invoiced_to_username"`
+	InvoicedTo         *User   `bson:"invoiced_to"`
+	Amount             float64 `bson:"amount"`
+	CreatedAt          string  `bson:"created_at"`
 }
 
 type InvoiceInput struct {
-	CreatedByID  string  `bson:"created_by_id"`
-	InvoicedToID string  `bson:"invoiced_to_id"`
-	Amount       float64 `bson:"amount"`
+	CreatedByUsername  string  `bson:"created_by_username"`
+	InvoicedToUsername string  `bson:"invoiced_to_username"`
+	Amount             float64 `bson:"amount"`
 }
 
 type InvoiceResult struct {
@@ -25,19 +25,19 @@ type InvoiceResult struct {
 }
 
 type Payment struct {
-	ID          string  `bson:"id"`
-	CreatedByID string  `bson:"created_by_id"`
-	CreatedBy   *User   `bson:"created_by"`
-	PaidToID    string  `bson:"paid_to_id"`
-	PaidTo      *User   `bson:"paid_to"`
-	Amount      float64 `bson:"amount"`
-	CreatedAt   string  `bson:"created_at"`
+	ID                string  `bson:"id"`
+	CreatedByUsername string  `bson:"created_by_username"`
+	CreatedBy         *User   `bson:"created_by"`
+	PaidToUsername    string  `bson:"paid_to_username"`
+	PaidTo            *User   `bson:"paid_to"`
+	Amount            float64 `bson:"amount"`
+	CreatedAt         string  `bson:"created_at"`
 }
 
 type PaymentInput struct {
-	CreatedByID string  `bson:"created_by_id"`
-	PaidToID    string  `bson:"paid_to_id"`
-	Amount      float64 `bson:"amount"`
+	CreatedByUsername string  `bson:"created_by_username"`
+	PaidToUsername    string  `bson:"paid_to_username"`
+	Amount            float64 `bson:"amount"`
 }
 
 type PaymentResult struct {

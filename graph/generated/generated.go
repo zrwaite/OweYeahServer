@@ -45,13 +45,13 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Invoice struct {
-		Amount       func(childComplexity int) int
-		CreatedAt    func(childComplexity int) int
-		CreatedBy    func(childComplexity int) int
-		CreatedByID  func(childComplexity int) int
-		ID           func(childComplexity int) int
-		InvoicedTo   func(childComplexity int) int
-		InvoicedToID func(childComplexity int) int
+		Amount             func(childComplexity int) int
+		CreatedAt          func(childComplexity int) int
+		CreatedBy          func(childComplexity int) int
+		CreatedByUsername  func(childComplexity int) int
+		ID                 func(childComplexity int) int
+		InvoicedTo         func(childComplexity int) int
+		InvoicedToUsername func(childComplexity int) int
 	}
 
 	InvoiceResult struct {
@@ -71,13 +71,13 @@ type ComplexityRoot struct {
 	}
 
 	Payment struct {
-		Amount      func(childComplexity int) int
-		CreatedAt   func(childComplexity int) int
-		CreatedBy   func(childComplexity int) int
-		CreatedByID func(childComplexity int) int
-		ID          func(childComplexity int) int
-		PaidTo      func(childComplexity int) int
-		PaidToID    func(childComplexity int) int
+		Amount            func(childComplexity int) int
+		CreatedAt         func(childComplexity int) int
+		CreatedBy         func(childComplexity int) int
+		CreatedByUsername func(childComplexity int) int
+		ID                func(childComplexity int) int
+		PaidTo            func(childComplexity int) int
+		PaidToUsername    func(childComplexity int) int
 	}
 
 	PaymentResult struct {
@@ -180,12 +180,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Invoice.CreatedBy(childComplexity), true
 
-	case "Invoice.created_by_id":
-		if e.complexity.Invoice.CreatedByID == nil {
+	case "Invoice.created_by_username":
+		if e.complexity.Invoice.CreatedByUsername == nil {
 			break
 		}
 
-		return e.complexity.Invoice.CreatedByID(childComplexity), true
+		return e.complexity.Invoice.CreatedByUsername(childComplexity), true
 
 	case "Invoice.id":
 		if e.complexity.Invoice.ID == nil {
@@ -201,12 +201,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Invoice.InvoicedTo(childComplexity), true
 
-	case "Invoice.invoiced_to_id":
-		if e.complexity.Invoice.InvoicedToID == nil {
+	case "Invoice.invoiced_to_username":
+		if e.complexity.Invoice.InvoicedToUsername == nil {
 			break
 		}
 
-		return e.complexity.Invoice.InvoicedToID(childComplexity), true
+		return e.complexity.Invoice.InvoicedToUsername(childComplexity), true
 
 	case "InvoiceResult.errors":
 		if e.complexity.InvoiceResult.Errors == nil {
@@ -334,12 +334,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Payment.CreatedBy(childComplexity), true
 
-	case "Payment.created_by_id":
-		if e.complexity.Payment.CreatedByID == nil {
+	case "Payment.created_by_username":
+		if e.complexity.Payment.CreatedByUsername == nil {
 			break
 		}
 
-		return e.complexity.Payment.CreatedByID(childComplexity), true
+		return e.complexity.Payment.CreatedByUsername(childComplexity), true
 
 	case "Payment.id":
 		if e.complexity.Payment.ID == nil {
@@ -355,12 +355,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Payment.PaidTo(childComplexity), true
 
-	case "Payment.paid_to_id":
-		if e.complexity.Payment.PaidToID == nil {
+	case "Payment.paid_to_username":
+		if e.complexity.Payment.PaidToUsername == nil {
 			break
 		}
 
-		return e.complexity.Payment.PaidToID(childComplexity), true
+		return e.complexity.Payment.PaidToUsername(childComplexity), true
 
 	case "PaymentResult.errors":
 		if e.complexity.PaymentResult.Errors == nil {
@@ -674,9 +674,9 @@ type UserAuthResult {
 
 type Invoice {
 	id: ID!
-	created_by_id: ID!
+	created_by_username: String!
 	created_by: User!
-	invoiced_to_id: ID!
+	invoiced_to_username: String!
 	invoiced_to: User!
 	amount: Float!
 	created_at: String!
@@ -690,9 +690,9 @@ type InvoiceResult {
 
 type Payment {
 	id: ID!
-	created_by_id: ID!
+	created_by_username: String!
 	created_by: User!
-	paid_to_id: ID!
+	paid_to_username: String!
 	paid_to: User!
 	amount: Float!
 	created_at: String!
@@ -715,14 +715,14 @@ input UserInput {
 }
 
 input InvoiceInput {
-	created_by_id: ID!
-	invoiced_to_id: ID!
+	created_by_username: ID!
+	invoiced_to_username: ID!
 	amount: Float!
 }
 
 input PaymentInput {
-	created_by_id: ID!
-	paid_to_id: ID!
+	created_by_username: ID!
+	paid_to_username: ID!
 	amount: Float!
 }
 
@@ -998,8 +998,8 @@ func (ec *executionContext) fieldContext_Invoice_id(ctx context.Context, field g
 	return fc, nil
 }
 
-func (ec *executionContext) _Invoice_created_by_id(ctx context.Context, field graphql.CollectedField, obj *model.Invoice) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Invoice_created_by_id(ctx, field)
+func (ec *executionContext) _Invoice_created_by_username(ctx context.Context, field graphql.CollectedField, obj *model.Invoice) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Invoice_created_by_username(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1012,7 +1012,7 @@ func (ec *executionContext) _Invoice_created_by_id(ctx context.Context, field gr
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.CreatedByID, nil
+		return obj.CreatedByUsername, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1026,17 +1026,17 @@ func (ec *executionContext) _Invoice_created_by_id(ctx context.Context, field gr
 	}
 	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNID2string(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Invoice_created_by_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Invoice_created_by_username(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Invoice",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type ID does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -1110,8 +1110,8 @@ func (ec *executionContext) fieldContext_Invoice_created_by(ctx context.Context,
 	return fc, nil
 }
 
-func (ec *executionContext) _Invoice_invoiced_to_id(ctx context.Context, field graphql.CollectedField, obj *model.Invoice) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Invoice_invoiced_to_id(ctx, field)
+func (ec *executionContext) _Invoice_invoiced_to_username(ctx context.Context, field graphql.CollectedField, obj *model.Invoice) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Invoice_invoiced_to_username(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1124,7 +1124,7 @@ func (ec *executionContext) _Invoice_invoiced_to_id(ctx context.Context, field g
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.InvoicedToID, nil
+		return obj.InvoicedToUsername, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1138,17 +1138,17 @@ func (ec *executionContext) _Invoice_invoiced_to_id(ctx context.Context, field g
 	}
 	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNID2string(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Invoice_invoiced_to_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Invoice_invoiced_to_username(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Invoice",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type ID does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -1392,12 +1392,12 @@ func (ec *executionContext) fieldContext_InvoiceResult_invoice(ctx context.Conte
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Invoice_id(ctx, field)
-			case "created_by_id":
-				return ec.fieldContext_Invoice_created_by_id(ctx, field)
+			case "created_by_username":
+				return ec.fieldContext_Invoice_created_by_username(ctx, field)
 			case "created_by":
 				return ec.fieldContext_Invoice_created_by(ctx, field)
-			case "invoiced_to_id":
-				return ec.fieldContext_Invoice_invoiced_to_id(ctx, field)
+			case "invoiced_to_username":
+				return ec.fieldContext_Invoice_invoiced_to_username(ctx, field)
 			case "invoiced_to":
 				return ec.fieldContext_Invoice_invoiced_to(ctx, field)
 			case "amount":
@@ -1935,8 +1935,8 @@ func (ec *executionContext) fieldContext_Payment_id(ctx context.Context, field g
 	return fc, nil
 }
 
-func (ec *executionContext) _Payment_created_by_id(ctx context.Context, field graphql.CollectedField, obj *model.Payment) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Payment_created_by_id(ctx, field)
+func (ec *executionContext) _Payment_created_by_username(ctx context.Context, field graphql.CollectedField, obj *model.Payment) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Payment_created_by_username(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1949,7 +1949,7 @@ func (ec *executionContext) _Payment_created_by_id(ctx context.Context, field gr
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.CreatedByID, nil
+		return obj.CreatedByUsername, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1963,17 +1963,17 @@ func (ec *executionContext) _Payment_created_by_id(ctx context.Context, field gr
 	}
 	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNID2string(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Payment_created_by_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Payment_created_by_username(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Payment",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type ID does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -2047,8 +2047,8 @@ func (ec *executionContext) fieldContext_Payment_created_by(ctx context.Context,
 	return fc, nil
 }
 
-func (ec *executionContext) _Payment_paid_to_id(ctx context.Context, field graphql.CollectedField, obj *model.Payment) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Payment_paid_to_id(ctx, field)
+func (ec *executionContext) _Payment_paid_to_username(ctx context.Context, field graphql.CollectedField, obj *model.Payment) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Payment_paid_to_username(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2061,7 +2061,7 @@ func (ec *executionContext) _Payment_paid_to_id(ctx context.Context, field graph
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.PaidToID, nil
+		return obj.PaidToUsername, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2075,17 +2075,17 @@ func (ec *executionContext) _Payment_paid_to_id(ctx context.Context, field graph
 	}
 	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNID2string(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Payment_paid_to_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Payment_paid_to_username(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Payment",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type ID does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -2329,12 +2329,12 @@ func (ec *executionContext) fieldContext_PaymentResult_payment(ctx context.Conte
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Payment_id(ctx, field)
-			case "created_by_id":
-				return ec.fieldContext_Payment_created_by_id(ctx, field)
+			case "created_by_username":
+				return ec.fieldContext_Payment_created_by_username(ctx, field)
 			case "created_by":
 				return ec.fieldContext_Payment_created_by(ctx, field)
-			case "paid_to_id":
-				return ec.fieldContext_Payment_paid_to_id(ctx, field)
+			case "paid_to_username":
+				return ec.fieldContext_Payment_paid_to_username(ctx, field)
 			case "paid_to":
 				return ec.fieldContext_Payment_paid_to(ctx, field)
 			case "amount":
@@ -3034,12 +3034,12 @@ func (ec *executionContext) fieldContext_User_invoices(ctx context.Context, fiel
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Invoice_id(ctx, field)
-			case "created_by_id":
-				return ec.fieldContext_Invoice_created_by_id(ctx, field)
+			case "created_by_username":
+				return ec.fieldContext_Invoice_created_by_username(ctx, field)
 			case "created_by":
 				return ec.fieldContext_Invoice_created_by(ctx, field)
-			case "invoiced_to_id":
-				return ec.fieldContext_Invoice_invoiced_to_id(ctx, field)
+			case "invoiced_to_username":
+				return ec.fieldContext_Invoice_invoiced_to_username(ctx, field)
 			case "invoiced_to":
 				return ec.fieldContext_Invoice_invoiced_to(ctx, field)
 			case "amount":
@@ -3138,12 +3138,12 @@ func (ec *executionContext) fieldContext_User_payments(ctx context.Context, fiel
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Payment_id(ctx, field)
-			case "created_by_id":
-				return ec.fieldContext_Payment_created_by_id(ctx, field)
+			case "created_by_username":
+				return ec.fieldContext_Payment_created_by_username(ctx, field)
 			case "created_by":
 				return ec.fieldContext_Payment_created_by(ctx, field)
-			case "paid_to_id":
-				return ec.fieldContext_Payment_paid_to_id(ctx, field)
+			case "paid_to_username":
+				return ec.fieldContext_Payment_paid_to_username(ctx, field)
 			case "paid_to":
 				return ec.fieldContext_Payment_paid_to(ctx, field)
 			case "amount":
@@ -5545,19 +5545,19 @@ func (ec *executionContext) unmarshalInputInvoiceInput(ctx context.Context, obj 
 
 	for k, v := range asMap {
 		switch k {
-		case "created_by_id":
+		case "created_by_username":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("created_by_id"))
-			it.CreatedByID, err = ec.unmarshalNID2string(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("created_by_username"))
+			it.CreatedByUsername, err = ec.unmarshalNID2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
-		case "invoiced_to_id":
+		case "invoiced_to_username":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("invoiced_to_id"))
-			it.InvoicedToID, err = ec.unmarshalNID2string(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("invoiced_to_username"))
+			it.InvoicedToUsername, err = ec.unmarshalNID2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -5584,19 +5584,19 @@ func (ec *executionContext) unmarshalInputPaymentInput(ctx context.Context, obj 
 
 	for k, v := range asMap {
 		switch k {
-		case "created_by_id":
+		case "created_by_username":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("created_by_id"))
-			it.CreatedByID, err = ec.unmarshalNID2string(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("created_by_username"))
+			it.CreatedByUsername, err = ec.unmarshalNID2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
-		case "paid_to_id":
+		case "paid_to_username":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("paid_to_id"))
-			it.PaidToID, err = ec.unmarshalNID2string(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("paid_to_username"))
+			it.PaidToUsername, err = ec.unmarshalNID2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -5670,9 +5670,9 @@ func (ec *executionContext) _Invoice(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "created_by_id":
+		case "created_by_username":
 
-			out.Values[i] = ec._Invoice_created_by_id(ctx, field, obj)
+			out.Values[i] = ec._Invoice_created_by_username(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -5684,9 +5684,9 @@ func (ec *executionContext) _Invoice(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "invoiced_to_id":
+		case "invoiced_to_username":
 
-			out.Values[i] = ec._Invoice_invoiced_to_id(ctx, field, obj)
+			out.Values[i] = ec._Invoice_invoiced_to_username(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -5869,9 +5869,9 @@ func (ec *executionContext) _Payment(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "created_by_id":
+		case "created_by_username":
 
-			out.Values[i] = ec._Payment_created_by_id(ctx, field, obj)
+			out.Values[i] = ec._Payment_created_by_username(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -5883,9 +5883,9 @@ func (ec *executionContext) _Payment(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "paid_to_id":
+		case "paid_to_username":
 
-			out.Values[i] = ec._Payment_paid_to_id(ctx, field, obj)
+			out.Values[i] = ec._Payment_paid_to_username(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
