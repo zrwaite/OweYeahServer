@@ -52,6 +52,12 @@ type ComplexityRoot struct {
 		ID              func(childComplexity int) int
 	}
 
+	ConnectionResult struct {
+		Connection func(childComplexity int) int
+		Errors     func(childComplexity int) int
+		Success    func(childComplexity int) int
+	}
+
 	InvoiceOrPayment struct {
 		Amount            func(childComplexity int) int
 		Connection        func(childComplexity int) int
@@ -69,13 +75,12 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		AddContact    func(childComplexity int, username string, contactUsername string) int
-		CreateInvoice func(childComplexity int, input model.InvoiceOrPaymentInput) int
-		CreatePayment func(childComplexity int, input model.InvoiceOrPaymentInput) int
-		CreateUser    func(childComplexity int, input model.UserInput) int
-		DeleteUser    func(childComplexity int, username string) int
-		Login         func(childComplexity int, input model.UserInput) int
-		RemoveContact func(childComplexity int, username string, contactUsername string) int
+		CreateConnection func(childComplexity int, username string, contactUsername string) int
+		CreateInvoice    func(childComplexity int, input model.InvoiceOrPaymentInput) int
+		CreatePayment    func(childComplexity int, input model.InvoiceOrPaymentInput) int
+		CreateUser       func(childComplexity int, input model.UserInput) int
+		DeleteUser       func(childComplexity int, username string) int
+		Login            func(childComplexity int, input model.UserInput) int
 	}
 
 	Query struct {
@@ -126,10 +131,9 @@ type MutationResolver interface {
 	CreateUser(ctx context.Context, input model.UserInput) (*model.UserAuthResult, error)
 	Login(ctx context.Context, input model.UserInput) (*model.UserAuthResult, error)
 	DeleteUser(ctx context.Context, username string) (*model.Result, error)
+	CreateConnection(ctx context.Context, username string, contactUsername string) (*model.ConnectionResult, error)
 	CreateInvoice(ctx context.Context, input model.InvoiceOrPaymentInput) (*model.InvoiceOrPaymentResult, error)
 	CreatePayment(ctx context.Context, input model.InvoiceOrPaymentInput) (*model.InvoiceOrPaymentResult, error)
-	AddContact(ctx context.Context, username string, contactUsername string) (*model.Result, error)
-	RemoveContact(ctx context.Context, username string, contactUsername string) (*model.Result, error)
 }
 type QueryResolver interface {
 	User(ctx context.Context, username string) (*model.UserResult, error)
@@ -185,6 +189,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Connection.ID(childComplexity), true
+
+	case "ConnectionResult.connection":
+		if e.complexity.ConnectionResult.Connection == nil {
+			break
+		}
+
+		return e.complexity.ConnectionResult.Connection(childComplexity), true
+
+	case "ConnectionResult.errors":
+		if e.complexity.ConnectionResult.Errors == nil {
+			break
+		}
+
+		return e.complexity.ConnectionResult.Errors(childComplexity), true
+
+	case "ConnectionResult.success":
+		if e.complexity.ConnectionResult.Success == nil {
+			break
+		}
+
+		return e.complexity.ConnectionResult.Success(childComplexity), true
 
 	case "InvoiceOrPayment.amount":
 		if e.complexity.InvoiceOrPayment.Amount == nil {
@@ -256,17 +281,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.InvoiceOrPaymentResult.Success(childComplexity), true
 
-	case "Mutation.addContact":
-		if e.complexity.Mutation.AddContact == nil {
+	case "Mutation.createConnection":
+		if e.complexity.Mutation.CreateConnection == nil {
 			break
 		}
 
-		args, err := ec.field_Mutation_addContact_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_createConnection_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Mutation.AddContact(childComplexity, args["username"].(string), args["contact_username"].(string)), true
+		return e.complexity.Mutation.CreateConnection(childComplexity, args["username"].(string), args["contact_username"].(string)), true
 
 	case "Mutation.createInvoice":
 		if e.complexity.Mutation.CreateInvoice == nil {
@@ -327,18 +352,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.Login(childComplexity, args["input"].(model.UserInput)), true
-
-	case "Mutation.removeContact":
-		if e.complexity.Mutation.RemoveContact == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_removeContact_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.RemoveContact(childComplexity, args["username"].(string), args["contact_username"].(string)), true
 
 	case "Query.getFilteredUsers":
 		if e.complexity.Query.GetFilteredUsers == nil {
@@ -623,6 +636,12 @@ type UserResult {
 	errors: [String!]
 }
 
+type ConnectionResult {
+	success: Boolean!
+	connection: Connection
+	errors: [String!]
+}
+
 type UsersResult {
 	success: Boolean!
 	users: [User!]
@@ -677,10 +696,9 @@ type Mutation {
 	createUser(input: UserInput!): UserAuthResult!
 	login(input: UserInput!): UserAuthResult!
 	deleteUser(username: String!): Result!
+	createConnection(username: String!, contact_username: String!): ConnectionResult!
 	createInvoice(input: InvoiceOrPaymentInput!): InvoiceOrPaymentResult!
 	createPayment(input: InvoiceOrPaymentInput!): InvoiceOrPaymentResult!
-	addContact(username: String!, contact_username: String!): Result!
-	removeContact(username: String!, contact_username: String!): Result!
 }
 `, BuiltIn: false},
 }
@@ -690,7 +708,7 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // region    ***************************** args.gotpl *****************************
 
-func (ec *executionContext) field_Mutation_addContact_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Mutation_createConnection_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
@@ -786,30 +804,6 @@ func (ec *executionContext) field_Mutation_login_args(ctx context.Context, rawAr
 		}
 	}
 	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_removeContact_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["username"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("username"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["username"] = arg0
-	var arg1 string
-	if tmp, ok := rawArgs["contact_username"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contact_username"))
-		arg1, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["contact_username"] = arg1
 	return args, nil
 }
 
@@ -1130,6 +1124,144 @@ func (ec *executionContext) _Connection_created_at(ctx context.Context, field gr
 func (ec *executionContext) fieldContext_Connection_created_at(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Connection",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ConnectionResult_success(ctx context.Context, field graphql.CollectedField, obj *model.ConnectionResult) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ConnectionResult_success(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Success, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ConnectionResult_success(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ConnectionResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ConnectionResult_connection(ctx context.Context, field graphql.CollectedField, obj *model.ConnectionResult) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ConnectionResult_connection(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Connection, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Connection)
+	fc.Result = res
+	return ec.marshalOConnection2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ConnectionResult_connection(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ConnectionResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Connection_id(ctx, field)
+			case "contact_username":
+				return ec.fieldContext_Connection_contact_username(ctx, field)
+			case "contact":
+				return ec.fieldContext_Connection_contact(ctx, field)
+			case "debt":
+				return ec.fieldContext_Connection_debt(ctx, field)
+			case "created_at":
+				return ec.fieldContext_Connection_created_at(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Connection", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ConnectionResult_errors(ctx context.Context, field graphql.CollectedField, obj *model.ConnectionResult) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ConnectionResult_errors(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Errors, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]string)
+	fc.Result = res
+	return ec.marshalOString2ᚕstringᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ConnectionResult_errors(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ConnectionResult",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -1817,6 +1949,69 @@ func (ec *executionContext) fieldContext_Mutation_deleteUser(ctx context.Context
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_createConnection(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createConnection(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateConnection(rctx, fc.Args["username"].(string), fc.Args["contact_username"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.ConnectionResult)
+	fc.Result = res
+	return ec.marshalNConnectionResult2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐConnectionResult(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createConnection(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "success":
+				return ec.fieldContext_ConnectionResult_success(ctx, field)
+			case "connection":
+				return ec.fieldContext_ConnectionResult_connection(ctx, field)
+			case "errors":
+				return ec.fieldContext_ConnectionResult_errors(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ConnectionResult", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createConnection_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Mutation_createInvoice(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_createInvoice(ctx, field)
 	if err != nil {
@@ -1937,128 +2132,6 @@ func (ec *executionContext) fieldContext_Mutation_createPayment(ctx context.Cont
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_createPayment_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Mutation_addContact(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_addContact(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().AddContact(rctx, fc.Args["username"].(string), fc.Args["contact_username"].(string))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*model.Result)
-	fc.Result = res
-	return ec.marshalNResult2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐResult(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_addContact(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "success":
-				return ec.fieldContext_Result_success(ctx, field)
-			case "errors":
-				return ec.fieldContext_Result_errors(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Result", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_addContact_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Mutation_removeContact(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_removeContact(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().RemoveContact(rctx, fc.Args["username"].(string), fc.Args["contact_username"].(string))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*model.Result)
-	fc.Result = res
-	return ec.marshalNResult2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐResult(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_removeContact(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "success":
-				return ec.fieldContext_Result_success(ctx, field)
-			case "errors":
-				return ec.fieldContext_Result_errors(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Result", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_removeContact_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -5334,6 +5407,42 @@ func (ec *executionContext) _Connection(ctx context.Context, sel ast.SelectionSe
 	return out
 }
 
+var connectionResultImplementors = []string{"ConnectionResult"}
+
+func (ec *executionContext) _ConnectionResult(ctx context.Context, sel ast.SelectionSet, obj *model.ConnectionResult) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, connectionResultImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ConnectionResult")
+		case "success":
+
+			out.Values[i] = ec._ConnectionResult_success(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "connection":
+
+			out.Values[i] = ec._ConnectionResult_connection(ctx, field, obj)
+
+		case "errors":
+
+			out.Values[i] = ec._ConnectionResult_errors(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var invoiceOrPaymentImplementors = []string{"InvoiceOrPayment"}
 
 func (ec *executionContext) _InvoiceOrPayment(ctx context.Context, sel ast.SelectionSet, obj *model.InvoiceOrPayment) graphql.Marshaler {
@@ -5486,6 +5595,15 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "createConnection":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createConnection(ctx, field)
+			})
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "createInvoice":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -5499,24 +5617,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createPayment(ctx, field)
-			})
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "addContact":
-
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_addContact(ctx, field)
-			})
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "removeContact":
-
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_removeContact(ctx, field)
 			})
 
 			if out.Values[i] == graphql.Null {
@@ -6253,6 +6353,20 @@ func (ec *executionContext) marshalNConnection2ᚖgithubᚗcomᚋzrwaiteᚋOweMa
 	return ec._Connection(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNConnectionResult2githubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐConnectionResult(ctx context.Context, sel ast.SelectionSet, v model.ConnectionResult) graphql.Marshaler {
+	return ec._ConnectionResult(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNConnectionResult2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐConnectionResult(ctx context.Context, sel ast.SelectionSet, v *model.ConnectionResult) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._ConnectionResult(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNFloat2float64(ctx context.Context, v interface{}) (float64, error) {
 	res, err := graphql.UnmarshalFloatContext(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -6751,6 +6865,13 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	}
 	res := graphql.MarshalBoolean(*v)
 	return res
+}
+
+func (ec *executionContext) marshalOConnection2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐConnection(ctx context.Context, sel ast.SelectionSet, v *model.Connection) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Connection(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOInvoiceOrPayment2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐInvoiceOrPayment(ctx context.Context, sel ast.SelectionSet, v *model.InvoiceOrPayment) graphql.Marshaler {

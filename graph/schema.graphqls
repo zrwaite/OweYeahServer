@@ -26,6 +26,12 @@ type UserResult {
 	errors: [String!]
 }
 
+type ConnectionResult {
+	success: Boolean!
+	connection: Connection
+	errors: [String!]
+}
+
 type UsersResult {
 	success: Boolean!
 	users: [User!]
@@ -80,8 +86,7 @@ type Mutation {
 	createUser(input: UserInput!): UserAuthResult!
 	login(input: UserInput!): UserAuthResult!
 	deleteUser(username: String!): Result!
+	createConnection(username: String!, contact_username: String!): ConnectionResult!
 	createInvoice(input: InvoiceOrPaymentInput!): InvoiceOrPaymentResult!
 	createPayment(input: InvoiceOrPaymentInput!): InvoiceOrPaymentResult!
-	addContact(username: String!, contact_username: String!): Result!
-	removeContact(username: String!, contact_username: String!): Result!
 }

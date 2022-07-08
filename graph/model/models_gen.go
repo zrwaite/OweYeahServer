@@ -10,6 +10,12 @@ type Connection struct {
 	CreatedAt       string  `bson:"created_at"`
 }
 
+type ConnectionResult struct {
+	Success    bool        `bson:"success"`
+	Connection *Connection `bson:"connection"`
+	Errors     []string    `bson:"errors"`
+}
+
 type InvoiceOrPayment struct {
 	ID                string      `bson:"id"`
 	CreatedByUsername string      `bson:"created_by_username"`
