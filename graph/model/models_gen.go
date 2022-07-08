@@ -3,80 +3,86 @@
 package model
 
 type Connection struct {
-	ID              string  `bson:"id"`
-	ContactUsername string  `bson:"contact_username"`
-	Contact         *User   `bson:"contact"`
-	Debt            float64 `bson:"debt"`
-	CreatedAt       string  `bson:"created_at"`
+	ID              string  `json:"id"`
+	ContactUsername string  `json:"contact_username"`
+	Contact         *User   `json:"contact"`
+	Debt            float64 `json:"debt"`
+	CreatedAt       string  `json:"created_at"`
 }
 
 type ConnectionResult struct {
-	Success    bool        `bson:"success"`
-	Connection *Connection `bson:"connection"`
-	Errors     []string    `bson:"errors"`
+	Success    bool        `json:"success"`
+	Connection *Connection `json:"connection"`
+	Errors     []string    `json:"errors"`
 }
 
 type InvoiceOrPayment struct {
-	ID                string      `bson:"id"`
-	CreatedByUsername string      `bson:"created_by_username"`
-	CreatedBy         *User       `bson:"created_by"`
-	ConnectionID      string      `bson:"connection_id"`
-	Connection        *Connection `bson:"connection"`
-	Amount            float64     `bson:"amount"`
-	CreatedAt         string      `bson:"created_at"`
+	ID                string      `json:"id"`
+	CreatedByUsername string      `json:"created_by_username"`
+	CreatedBy         *User       `json:"created_by"`
+	ConnectionID      string      `json:"connection_id"`
+	Connection        *Connection `json:"connection"`
+	Amount            float64     `json:"amount"`
+	CreatedAt         string      `json:"created_at"`
 }
 
 type InvoiceOrPaymentInput struct {
-	CreatedByUsername string  `bson:"created_by_username"`
-	ConnectionID      string  `bson:"connection_id"`
-	Amount            float64 `bson:"amount"`
+	CreatedByUsername string  `json:"created_by_username"`
+	ConnectionID      string  `json:"connection_id"`
+	Amount            float64 `json:"amount"`
 }
 
-type InvoiceOrPaymentResult struct {
-	Success bool              `bson:"success"`
-	Invoice *InvoiceOrPayment `bson:"invoice"`
-	Errors  []string          `bson:"errors"`
+type InvoiceResult struct {
+	Success bool              `json:"success"`
+	Invoice *InvoiceOrPayment `json:"invoice"`
+	Errors  []string          `json:"errors"`
+}
+
+type PaymentResult struct {
+	Success bool              `json:"success"`
+	Payment *InvoiceOrPayment `json:"payment"`
+	Errors  []string          `json:"errors"`
 }
 
 type Result struct {
-	Success bool     `bson:"success"`
-	Errors  []string `bson:"errors"`
+	Success bool     `json:"success"`
+	Errors  []string `json:"errors"`
 }
 
 type User struct {
-	ID            string              `bson:"id"`
-	Username      string              `bson:"username"`
-	Hash          string              `bson:"hash"`
-	DisplayName   string              `bson:"display_name"`
-	CreatedAt     string              `bson:"created_at"`
-	InvoiceIds    []string            `bson:"invoice_ids"`
-	Invoices      []*InvoiceOrPayment `bson:"invoices"`
-	PaymentIds    []string            `bson:"payment_ids"`
-	Payments      []*InvoiceOrPayment `bson:"payments"`
-	ConnectionIds []string            `bson:"connection_ids"`
-	Connections   []*Connection       `bson:"connections"`
+	ID            string              `json:"id"`
+	Username      string              `json:"username"`
+	Hash          string              `json:"hash"`
+	DisplayName   string              `json:"display_name"`
+	CreatedAt     string              `json:"created_at"`
+	InvoiceIds    []string            `json:"invoice_ids"`
+	Invoices      []*InvoiceOrPayment `json:"invoices"`
+	PaymentIds    []string            `json:"payment_ids"`
+	Payments      []*InvoiceOrPayment `json:"payments"`
+	ConnectionIds []string            `json:"connection_ids"`
+	Connections   []*Connection       `json:"connections"`
 }
 
 type UserAuthResult struct {
-	Success bool     `bson:"success"`
-	User    *User    `bson:"user"`
-	Token   string   `bson:"token"`
-	Errors  []string `bson:"errors"`
+	Success bool     `json:"success"`
+	User    *User    `json:"user"`
+	Token   string   `json:"token"`
+	Errors  []string `json:"errors"`
 }
 
 type UserInput struct {
-	Username string `bson:"username"`
-	Password string `bson:"password"`
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 type UserResult struct {
-	Success bool     `bson:"success"`
-	User    *User    `bson:"user"`
-	Errors  []string `bson:"errors"`
+	Success bool     `json:"success"`
+	User    *User    `json:"user"`
+	Errors  []string `json:"errors"`
 }
 
 type UsersResult struct {
-	Success bool     `bson:"success"`
-	Users   []*User  `bson:"users"`
-	Errors  []string `bson:"errors"`
+	Success bool     `json:"success"`
+	Users   []*User  `json:"users"`
+	Errors  []string `json:"errors"`
 }

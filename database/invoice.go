@@ -7,8 +7,8 @@ import (
 	"github.com/zrwaite/OweMate/graph/model"
 )
 
-func CreateInvoice(ctx context.Context, input model.InvoiceOrPaymentInput) *model.InvoiceOrPaymentResult {
-	invoiceResult := &model.InvoiceOrPaymentResult{}
+func CreateInvoice(ctx context.Context, input model.InvoiceOrPaymentInput) *model.InvoiceResult {
+	invoiceResult := &model.InvoiceResult{}
 	user, userStatus := GetUser(input.CreatedByUsername)
 	connection, connectionStatus := GetConnection(input.ConnectionID)
 	if userStatus == 404 {
@@ -36,6 +36,7 @@ func CreateInvoice(ctx context.Context, input model.InvoiceOrPaymentInput) *mode
 		CreatedByUsername: input.CreatedByUsername,
 		ConnectionID:      input.ConnectionID,
 		CreatedAt:         time.Now().Format("2006-01-02"),
+		Amount:            input.Amount,
 	}
 	newInvoice, insertErr := mongoDatabase.Collection("invoices").InsertOne(context.TODO(), invoice)
 	if insertErr != nil {
@@ -51,7 +52,11 @@ func CreateInvoice(ctx context.Context, input model.InvoiceOrPaymentInput) *mode
 			invoiceResult.Errors = append(invoiceResult.Errors, "Failed to add invoice to contact user")
 			return invoiceResult
 		}
-		return &model.InvoiceOrPaymentResult{
+		if !SettleInvoiceConnectionDebt(user, invoice, connection) {
+			invoiceResult.Errors = append(invoiceResult.Errors, "Failed to settle invoice connection debt")
+			return invoiceResult
+		}
+		return &model.InvoiceResult{
 			Success: true,
 			Invoice: invoice,
 		}
@@ -66,7 +71,7 @@ func AddInvoiceToUser(user *model.User, invoice *model.InvoiceOrPayment) bool {
 	return UpdateUser(user)
 }
 
-func SettleConnectionDebt(user *model.User, invoice *model.InvoiceOrPayment, connection *model.DatabaseConnection) bool {
+func SettleInvoiceConnectionDebt(user *model.User, invoice *model.InvoiceOrPayment, connection *model.DatabaseConnection) bool {
 	if connection.Username1 == user.Username {
 		connection.Debt -= invoice.Amount
 	} else if connection.Username2 == user.Username {

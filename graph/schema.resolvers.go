@@ -28,12 +28,12 @@ func (r *mutationResolver) CreateConnection(ctx context.Context, username string
 	return database.CreateConnection(ctx, username, contactUsername), nil
 }
 
-func (r *mutationResolver) CreateInvoice(ctx context.Context, input model.InvoiceOrPaymentInput) (*model.InvoiceOrPaymentResult, error) {
+func (r *mutationResolver) CreateInvoice(ctx context.Context, input model.InvoiceOrPaymentInput) (*model.InvoiceResult, error) {
 	return database.CreateInvoice(ctx, input), nil
 }
 
-func (r *mutationResolver) CreatePayment(ctx context.Context, input model.InvoiceOrPaymentInput) (*model.InvoiceOrPaymentResult, error) {
-	panic(fmt.Errorf("not implemented"))
+func (r *mutationResolver) CreatePayment(ctx context.Context, input model.InvoiceOrPaymentInput) (*model.PaymentResult, error) {
+	return database.CreatePayment(ctx, input), nil
 }
 
 func (r *queryResolver) User(ctx context.Context, username string) (*model.UserResult, error) {

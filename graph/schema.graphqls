@@ -55,9 +55,15 @@ type InvoiceOrPayment {
 	created_at: String!
 }
 
-type InvoiceOrPaymentResult {
+type InvoiceResult {
 	success: Boolean!
 	invoice: InvoiceOrPayment
+	errors: [String!]
+}
+
+type PaymentResult {
+	success: Boolean!
+	payment: InvoiceOrPayment
 	errors: [String!]
 }
 
@@ -87,6 +93,6 @@ type Mutation {
 	login(input: UserInput!): UserAuthResult!
 	deleteUser(username: String!): Result!
 	createConnection(username: String!, contact_username: String!): ConnectionResult!
-	createInvoice(input: InvoiceOrPaymentInput!): InvoiceOrPaymentResult!
-	createPayment(input: InvoiceOrPaymentInput!): InvoiceOrPaymentResult!
+	createInvoice(input: InvoiceOrPaymentInput!): InvoiceResult!
+	createPayment(input: InvoiceOrPaymentInput!): PaymentResult!
 }
