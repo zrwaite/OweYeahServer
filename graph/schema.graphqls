@@ -101,7 +101,7 @@ type Mutation {
 	createUser(input: UserInput!): UserAuthResult!
 	login(input: UserInput!): UserAuthResult!
 	deleteUser(username: String!): Result!
-	createConnection(username: String!, contact_username: String!): ConnectionResult!
+	createConnection(username1: String!, username2: String!): ConnectionResult!
 	createInvoice(input: InvoiceOrPaymentInput!): InvoiceResult!
 	createPayment(input: InvoiceOrPaymentInput!): PaymentResult!
 }

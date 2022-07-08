@@ -75,7 +75,7 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		CreateConnection func(childComplexity int, username string, contactUsername string) int
+		CreateConnection func(childComplexity int, username1 string, username2 string) int
 		CreateInvoice    func(childComplexity int, input model.InvoiceOrPaymentInput) int
 		CreatePayment    func(childComplexity int, input model.InvoiceOrPaymentInput) int
 		CreateUser       func(childComplexity int, input model.UserInput) int
@@ -146,7 +146,7 @@ type MutationResolver interface {
 	CreateUser(ctx context.Context, input model.UserInput) (*model.UserAuthResult, error)
 	Login(ctx context.Context, input model.UserInput) (*model.UserAuthResult, error)
 	DeleteUser(ctx context.Context, username string) (*model.Result, error)
-	CreateConnection(ctx context.Context, username string, contactUsername string) (*model.ConnectionResult, error)
+	CreateConnection(ctx context.Context, username1 string, username2 string) (*model.ConnectionResult, error)
 	CreateInvoice(ctx context.Context, input model.InvoiceOrPaymentInput) (*model.InvoiceResult, error)
 	CreatePayment(ctx context.Context, input model.InvoiceOrPaymentInput) (*model.PaymentResult, error)
 }
@@ -306,7 +306,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateConnection(childComplexity, args["username"].(string), args["contact_username"].(string)), true
+		return e.complexity.Mutation.CreateConnection(childComplexity, args["username1"].(string), args["username2"].(string)), true
 
 	case "Mutation.createInvoice":
 		if e.complexity.Mutation.CreateInvoice == nil {
@@ -789,7 +789,7 @@ type Mutation {
 	createUser(input: UserInput!): UserAuthResult!
 	login(input: UserInput!): UserAuthResult!
 	deleteUser(username: String!): Result!
-	createConnection(username: String!, contact_username: String!): ConnectionResult!
+	createConnection(username1: String!, username2: String!): ConnectionResult!
 	createInvoice(input: InvoiceOrPaymentInput!): InvoiceResult!
 	createPayment(input: InvoiceOrPaymentInput!): PaymentResult!
 }
@@ -805,23 +805,23 @@ func (ec *executionContext) field_Mutation_createConnection_args(ctx context.Con
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
-	if tmp, ok := rawArgs["username"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("username"))
+	if tmp, ok := rawArgs["username1"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("username1"))
 		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["username"] = arg0
+	args["username1"] = arg0
 	var arg1 string
-	if tmp, ok := rawArgs["contact_username"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contact_username"))
+	if tmp, ok := rawArgs["username2"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("username2"))
 		arg1, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["contact_username"] = arg1
+	args["username2"] = arg1
 	return args, nil
 }
 
@@ -2056,7 +2056,7 @@ func (ec *executionContext) _Mutation_createConnection(ctx context.Context, fiel
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateConnection(rctx, fc.Args["username"].(string), fc.Args["contact_username"].(string))
+		return ec.resolvers.Mutation().CreateConnection(rctx, fc.Args["username1"].(string), fc.Args["username2"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

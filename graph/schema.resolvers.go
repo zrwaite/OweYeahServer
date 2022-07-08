@@ -23,8 +23,8 @@ func (r *mutationResolver) DeleteUser(ctx context.Context, username string) (*mo
 	return database.DeleteUser(ctx, username), nil
 }
 
-func (r *mutationResolver) CreateConnection(ctx context.Context, username string, contactUsername string) (*model.ConnectionResult, error) {
-	return database.CreateConnection(ctx, username, contactUsername), nil
+func (r *mutationResolver) CreateConnection(ctx context.Context, username1 string, username2 string) (*model.ConnectionResult, error) {
+	return database.CreateConnection(ctx, username1, username2), nil
 }
 
 func (r *mutationResolver) CreateInvoice(ctx context.Context, input model.InvoiceOrPaymentInput) (*model.InvoiceResult, error) {

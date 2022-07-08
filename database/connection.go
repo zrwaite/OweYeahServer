@@ -58,10 +58,10 @@ func ParseUserConnection(username string, connection *model.DatabaseConnection) 
 	return
 }
 
-func CreateConnection(ctx context.Context, username string, contactUsername string) *model.ConnectionResult {
+func CreateConnection(ctx context.Context, username1 string, username2 string) *model.ConnectionResult {
 	connectionResult := &model.ConnectionResult{}
-	user, userStatus := GetUser(username)
-	contactUser, contactUserStatus := GetUser(contactUsername)
+	user, userStatus := GetUser(username1)
+	contactUser, contactUserStatus := GetUser(username2)
 	if userStatus == 404 {
 		connectionResult.Errors = append(connectionResult.Errors, "User not found")
 	} else if userStatus == 400 {
@@ -73,13 +73,20 @@ func CreateConnection(ctx context.Context, username string, contactUsername stri
 		connectionResult.Errors = append(connectionResult.Errors, "Something went wrong getting contact user")
 	}
 
+	existingConnectionStatus := FindExistingConnection(username1, username2)
+	if existingConnectionStatus == 200 {
+		connectionResult.Errors = append(connectionResult.Errors, "Connection already exists")
+	} else if existingConnectionStatus == 400 {
+		connectionResult.Errors = append(connectionResult.Errors, "Something went wrong finding existing connection")
+	}
+
 	if len(connectionResult.Errors) != 0 {
 		return connectionResult
 	}
 
 	connection := &model.DatabaseConnection{
-		Username1: username,
-		Username2: contactUsername,
+		Username1: username1,
+		Username2: username2,
 		CreatedAt: time.Now().Format("2006-01-02"),
 	}
 	newConnection, insertErr := mongoDatabase.Collection("connections").InsertOne(context.TODO(), connection)
@@ -106,7 +113,7 @@ func CreateConnection(ctx context.Context, username string, contactUsername stri
 			Connection: &model.Connection{
 				ID:              connection.ID,
 				Contact:         contactUser,
-				ContactUsername: contactUsername,
+				ContactUsername: username2,
 				CreatedAt:       time.Now().Format("2006-01-02"),
 			},
 		}
@@ -134,4 +141,19 @@ func UpdateConnection(connection *model.DatabaseConnection) bool {
 		return false
 	}
 	return true
+}
+
+func FindExistingConnection(username1 string, username2 string) int {
+	filter := bson.D{{"$or", bson.A{bson.D{{"username1", username1}, {"username2", username2}}, bson.D{{"username1", username2}, {"username2", username1}}}}}
+	connection := &model.DatabaseConnection{}
+	cursor := mongoDatabase.Collection("connections").FindOne(context.TODO(), filter)
+	if err := cursor.Decode(connection); err != nil {
+		if err.Error() == "mongo: no documents in result" {
+			return 404
+		} else {
+			fmt.Println("Failed to get connection ; " + err.Error())
+			return 400
+		}
+	}
+	return 200
 }
