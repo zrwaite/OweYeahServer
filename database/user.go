@@ -8,6 +8,7 @@ import (
 	"github.com/zrwaite/OweMate/auth"
 	"github.com/zrwaite/OweMate/auth/tokens"
 	"github.com/zrwaite/OweMate/graph/model"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 func GetUser(username string) (user *model.User, status int) {
@@ -78,11 +79,12 @@ func CreateUser(ctx context.Context, input model.UserInput) (userAuthResult *mod
 		userAuthResult.Errors = append(userAuthResult.Errors, "Failed to create hash for user "+user.Username+" ; "+err.Error())
 		return
 	}
-	_, insertErr := mongoDatabase.Collection("users").InsertOne(context.TODO(), user)
+	newUser, insertErr := mongoDatabase.Collection("users").InsertOne(context.TODO(), user)
 	if insertErr != nil {
 		userAuthResult.Errors = append(userAuthResult.Errors, "Failed to create user "+user.Username+" ; "+insertErr.Error())
 		return
 	} else {
+		user.ID = newUser.InsertedID.(string)
 		token, success := tokens.EncodeToken(user.Username)
 		if !success {
 			userAuthResult.Errors = append(userAuthResult.Errors, "Failed to create token for user "+user.Username+" ; "+err.Error())
@@ -144,4 +146,14 @@ func DeleteUser(ctx context.Context, username string) *model.Result {
 	return &model.Result{
 		Success: true,
 	}
+}
+
+func UpdateUser(user *model.User) bool {
+	update := bson.D{{"$set", user}}
+	_, err := mongoDatabase.Collection("users").UpdateOne(context.TODO(), CreateUsernameFilter(user.Username), update)
+	if err != nil {
+		fmt.Println(err.Error())
+		return false
+	}
+	return true
 }

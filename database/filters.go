@@ -11,3 +11,13 @@ func CreateUsernameFilter(username string) bson.D {
 		}},
 	}}
 }
+
+func CreateIdFilter(id string) bson.D {
+	return bson.D{{
+		Key: "_id",
+		Value: bson.D{{
+			Key:   "$eq",
+			Value: id,
+		}},
+	}}
+}

@@ -30,12 +30,13 @@ var UsersValidator = bson.M{
 var ConnectionsValidator = bson.M{
 	"$jsonSchema": bson.M{
 		"bsonType": "object",
-		"required": []string{"id", "contact_username", "created_at", "debt"},
+		"required": []string{"id", "username1", "username2", "created_at", "debt"},
 		"properties": bson.M{
-			"id":               bsonString,
-			"contact_username": bsonString,
-			"created_at":       bsonString,
-			"debt":             bson.M{"bsonType": "double"},
+			"id":         bsonString,
+			"username1":  bsonString,
+			"username2":  bsonString,
+			"created_at": bsonString,
+			"debt":       bson.M{"bsonType": "double"},
 		},
 	},
 }
