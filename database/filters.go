@@ -1,6 +1,9 @@
 package database
 
-import "go.mongodb.org/mongo-driver/bson"
+import (
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 func CreateUsernameFilter(username string) bson.D {
 	return bson.D{{
@@ -12,19 +15,26 @@ func CreateUsernameFilter(username string) bson.D {
 	}}
 }
 
-func CreateIdFilter(id string) bson.D {
+func CreateIdFilter(id string) (filter bson.D, success bool) {
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, false
+	}
 	return bson.D{{
 		Key: "_id",
 		Value: bson.D{{
 			Key:   "$eq",
-			Value: id,
+			Value: objectId,
 		}},
-	}}
+	}}, true
 }
 
 func CreatePartialUsernameFilter(partialUsername string) bson.D {
 	return bson.D{{
-		"_id",
-		bson.D{{"$search", partialUsername}},
+		Key: "username",
+		Value: bson.M{"$regex": primitive.Regex{
+			Pattern: partialUsername,
+			Options: "i",
+		}},
 	}}
 }

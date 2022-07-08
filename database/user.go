@@ -9,6 +9,7 @@ import (
 	"github.com/zrwaite/OweMate/auth/tokens"
 	"github.com/zrwaite/OweMate/graph/model"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func GetUser(username string) (user *model.User, status int) {
@@ -17,9 +18,8 @@ func GetUser(username string) (user *model.User, status int) {
 		status = 400
 		return
 	}
-	// opts := options.FindOne().SetProjection(projection)
+
 	cursor := mongoDatabase.Collection("users").FindOne(context.TODO(), CreateUsernameFilter(username))
-	// fmt.Printf("%+v\n", cursor)
 	if err := cursor.Decode(user); err != nil {
 		if err.Error() == "mongo: no documents in result" {
 			status = 404
@@ -27,7 +27,6 @@ func GetUser(username string) (user *model.User, status int) {
 			fmt.Println("Failed to get user " + username + " ; " + err.Error())
 			status = 400
 		}
-		return
 	} else {
 		status = 200
 	}
@@ -45,7 +44,8 @@ func GetFilteredUsers(ctx context.Context, partialUsername string) (usersResult 
 		usersResult.Errors = append(usersResult.Errors, "Failed to find users ; "+findErr.Error())
 		return
 	}
-	if err := cursor.Decode(usersResult.Users); err != nil {
+
+	if err := cursor.All(context.TODO(), &usersResult.Users); err != nil {
 		if err.Error() == "mongo: no documents in result" {
 			usersResult.Success = true
 		} else {
@@ -96,6 +96,7 @@ func CreateUser(ctx context.Context, input model.UserInput) (userAuthResult *mod
 	user.CreatedAt = time.Now().Format("2006-01-02")
 	user.InvoiceIds = []string{}
 	user.PaymentIds = []string{}
+	user.ConnectionIds = []string{}
 	user.DisplayName = ""
 
 	if err != nil {
@@ -107,7 +108,8 @@ func CreateUser(ctx context.Context, input model.UserInput) (userAuthResult *mod
 		userAuthResult.Errors = append(userAuthResult.Errors, "Failed to create user "+user.Username+" ; "+insertErr.Error())
 		return
 	} else {
-		user.ID = newUser.InsertedID.(string)
+		user.ID = newUser.InsertedID.(primitive.ObjectID).Hex()
+		UpdateUser(user)
 		token, success := tokens.EncodeToken(user.Username)
 		if !success {
 			userAuthResult.Errors = append(userAuthResult.Errors, "Failed to create token for user "+user.Username+" ; "+err.Error())

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/zrwaite/OweMate/graph/model"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func CreateInvoice(ctx context.Context, input model.InvoiceOrPaymentInput) *model.InvoiceResult {
@@ -43,7 +44,7 @@ func CreateInvoice(ctx context.Context, input model.InvoiceOrPaymentInput) *mode
 		invoiceResult.Errors = append(invoiceResult.Errors, "Failed to create invoice; "+insertErr.Error())
 		return invoiceResult
 	} else {
-		invoice.ID = newInvoice.InsertedID.(string)
+		invoice.ID = newInvoice.InsertedID.(primitive.ObjectID).Hex()
 		if !AddInvoiceToUser(user, invoice) {
 			invoiceResult.Errors = append(invoiceResult.Errors, "Failed to add invoice to user")
 			return invoiceResult

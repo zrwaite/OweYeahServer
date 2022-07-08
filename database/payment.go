@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/zrwaite/OweMate/graph/model"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func CreatePayment(ctx context.Context, input model.InvoiceOrPaymentInput) *model.PaymentResult {
@@ -43,7 +44,7 @@ func CreatePayment(ctx context.Context, input model.InvoiceOrPaymentInput) *mode
 		paymentResult.Errors = append(paymentResult.Errors, "Failed to create payment; "+insertErr.Error())
 		return paymentResult
 	} else {
-		payment.ID = newPayment.InsertedID.(string)
+		payment.ID = newPayment.InsertedID.(primitive.ObjectID).Hex()
 		if !AddPaymentToUser(user, payment) {
 			paymentResult.Errors = append(paymentResult.Errors, "Failed to add payment to user")
 			return paymentResult

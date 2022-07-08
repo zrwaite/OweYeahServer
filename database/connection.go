@@ -6,6 +6,8 @@ import (
 	"time"
 
 	"github.com/zrwaite/OweMate/graph/model"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func GetConnection(id string) (connection *model.DatabaseConnection, status int) {
@@ -14,7 +16,12 @@ func GetConnection(id string) (connection *model.DatabaseConnection, status int)
 		status = 400
 		return
 	}
-	cursor := mongoDatabase.Collection("connections").FindOne(context.TODO(), CreateIdFilter(id))
+	filter, filterSuccess := CreateIdFilter(connection.ID)
+	if !filterSuccess {
+		status = 400
+		return
+	}
+	cursor := mongoDatabase.Collection("connections").FindOne(context.TODO(), filter)
 	if err := cursor.Decode(connection); err != nil {
 		if err.Error() == "mongo: no documents in result" {
 			status = 404
@@ -81,7 +88,11 @@ func CreateConnection(ctx context.Context, username string, contactUsername stri
 		connectionResult.Errors = append(connectionResult.Errors, "Failed to create connection; "+insertErr.Error())
 		return connectionResult
 	} else {
-		connection.ID = newConnection.InsertedID.(string)
+		connection.ID = newConnection.InsertedID.(primitive.ObjectID).Hex()
+		if !UpdateConnection(connection) {
+			connectionResult.Errors = append(connectionResult.Errors, "Failed to update connection")
+			return connectionResult
+		}
 		if !AddConnectionToUser(user, connection.ID) {
 			connectionResult.Errors = append(connectionResult.Errors, "Failed to add connection to user")
 			return connectionResult
@@ -93,6 +104,8 @@ func CreateConnection(ctx context.Context, username string, contactUsername stri
 		return &model.ConnectionResult{
 			Success: true,
 			Connection: &model.Connection{
+				ID:              connection.ID,
+				Contact:         contactUser,
 				ContactUsername: contactUsername,
 				CreatedAt:       time.Now().Format("2006-01-02"),
 			},
@@ -103,4 +116,22 @@ func CreateConnection(ctx context.Context, username string, contactUsername stri
 func AddConnectionToUser(user *model.User, connectionId string) bool {
 	user.ConnectionIds = append(user.ConnectionIds, connectionId)
 	return UpdateUser(user)
+}
+
+func UpdateConnection(connection *model.DatabaseConnection) bool {
+	update := bson.D{{"$set", connection}}
+	filter, filterSuccess := CreateIdFilter(connection.ID)
+	if !filterSuccess {
+		return false
+	}
+	res, err := mongoDatabase.Collection("connections").UpdateOne(context.TODO(), filter, update)
+	// fmt.Printf("%+v\n", res)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return false
+	} else if res.MatchedCount == 0 {
+		return false
+	}
+	return true
 }
