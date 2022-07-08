@@ -34,6 +34,29 @@ func GetUser(username string) (user *model.User, status int) {
 	return
 }
 
+func GetFilteredUsers(ctx context.Context, partialUsername string) (usersResult *model.UsersResult) {
+	usersResult = &model.UsersResult{}
+	if partialUsername == "" {
+		usersResult.Errors = append(usersResult.Errors, "No username provided")
+		return
+	}
+	cursor, findErr := mongoDatabase.Collection("users").Find(context.TODO(), CreatePartialUsernameFilter(partialUsername))
+	if findErr != nil {
+		usersResult.Errors = append(usersResult.Errors, "Failed to find users ; "+findErr.Error())
+		return
+	}
+	if err := cursor.Decode(usersResult.Users); err != nil {
+		if err.Error() == "mongo: no documents in result" {
+			usersResult.Success = true
+		} else {
+			usersResult.Errors = append(usersResult.Errors, "Failed to get users ; "+err.Error())
+		}
+		return
+	}
+	usersResult.Success = true
+	return
+}
+
 func User(ctx context.Context, username string) *model.UserResult {
 	user, status := GetUser(username)
 	var userResult *model.UserResult

@@ -21,3 +21,10 @@ func CreateIdFilter(id string) bson.D {
 		}},
 	}}
 }
+
+func CreatePartialUsernameFilter(partialUsername string) bson.D {
+	return bson.D{{
+		"_id",
+		bson.D{{"$search", partialUsername}},
+	}}
+}
