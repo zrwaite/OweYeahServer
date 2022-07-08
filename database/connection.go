@@ -16,7 +16,7 @@ func GetConnection(id string) (connection *model.DatabaseConnection, status int)
 		status = 400
 		return
 	}
-	filter, filterSuccess := CreateIdFilter(connection.ID)
+	filter, filterSuccess := CreateIdFilter(id)
 	if !filterSuccess {
 		status = 400
 		return

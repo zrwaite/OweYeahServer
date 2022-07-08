@@ -2,9 +2,11 @@ package database
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/zrwaite/OweMate/graph/model"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -45,6 +47,10 @@ func CreateInvoice(ctx context.Context, input model.InvoiceOrPaymentInput) *mode
 		return invoiceResult
 	} else {
 		invoice.ID = newInvoice.InsertedID.(primitive.ObjectID).Hex()
+		if !UpdateInvoice(invoice) {
+			invoiceResult.Errors = append(invoiceResult.Errors, "Failed to update invoice")
+			return invoiceResult
+		}
 		if !AddInvoiceToUser(user, invoice) {
 			invoiceResult.Errors = append(invoiceResult.Errors, "Failed to add invoice to user")
 			return invoiceResult
@@ -78,6 +84,23 @@ func SettleInvoiceConnectionDebt(user *model.User, invoice *model.InvoiceOrPayme
 	} else if connection.Username2 == user.Username {
 		connection.Debt += invoice.Amount
 	} else {
+		return false
+	}
+	return true
+}
+
+func UpdateInvoice(invoice *model.InvoiceOrPayment) bool {
+	update := bson.D{{"$set", invoice}}
+	filter, filterSuccess := CreateIdFilter(invoice.ID)
+	if !filterSuccess {
+		return false
+	}
+	res, err := mongoDatabase.Collection("invoices").UpdateOne(context.TODO(), filter, update)
+	// fmt.Printf("%+v\n", res)
+	if err != nil {
+		fmt.Println(err.Error())
+		return false
+	} else if res.MatchedCount == 0 {
 		return false
 	}
 	return true

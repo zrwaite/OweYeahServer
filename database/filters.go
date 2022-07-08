@@ -1,6 +1,8 @@
 package database
 
 import (
+	"fmt"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -18,6 +20,7 @@ func CreateUsernameFilter(username string) bson.D {
 func CreateIdFilter(id string) (filter bson.D, success bool) {
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
+		fmt.Println("Failed to parse id " + id + " ; " + err.Error())
 		return nil, false
 	}
 	return bson.D{{

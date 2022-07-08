@@ -2,9 +2,11 @@ package database
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/zrwaite/OweMate/graph/model"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -45,6 +47,10 @@ func CreatePayment(ctx context.Context, input model.InvoiceOrPaymentInput) *mode
 		return paymentResult
 	} else {
 		payment.ID = newPayment.InsertedID.(primitive.ObjectID).Hex()
+		if !UpdatePayment(payment) {
+			paymentResult.Errors = append(paymentResult.Errors, "Failed to update payment")
+			return paymentResult
+		}
 		if !AddPaymentToUser(user, payment) {
 			paymentResult.Errors = append(paymentResult.Errors, "Failed to add payment to user")
 			return paymentResult
@@ -74,6 +80,23 @@ func SettlePaymentConnectionDebt(user *model.User, payment *model.InvoiceOrPayme
 	} else if connection.Username2 == user.Username {
 		connection.Debt -= payment.Amount
 	} else {
+		return false
+	}
+	return true
+}
+
+func UpdatePayment(payment *model.InvoiceOrPayment) bool {
+	update := bson.D{{"$set", payment}}
+	filter, filterSuccess := CreateIdFilter(payment.ID)
+	if !filterSuccess {
+		return false
+	}
+	res, err := mongoDatabase.Collection("payments").UpdateOne(context.TODO(), filter, update)
+	// fmt.Printf("%+v\n", res)
+	if err != nil {
+		fmt.Println(err.Error())
+		return false
+	} else if res.MatchedCount == 0 {
 		return false
 	}
 	return true
