@@ -5,11 +5,20 @@ package graph
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/zrwaite/OweMate/database"
 	"github.com/zrwaite/OweMate/graph/generated"
 	"github.com/zrwaite/OweMate/graph/model"
 )
+
+func (r *connectionResolver) Contact(ctx context.Context, obj *model.Connection) (*model.User, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *invoiceOrPaymentResolver) Connection(ctx context.Context, obj *model.InvoiceOrPayment) (*model.Connection, error) {
+	panic(fmt.Errorf("not implemented"))
+}
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.UserInput) (*model.UserAuthResult, error) {
 	return database.CreateUser(ctx, input), nil
@@ -43,11 +52,37 @@ func (r *queryResolver) GetFilteredUsers(ctx context.Context, partialUsername st
 	return database.GetFilteredUsers(ctx, partialUsername), nil
 }
 
+func (r *userResolver) Invoices(ctx context.Context, obj *model.User) ([]*model.InvoiceOrPayment, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *userResolver) Payments(ctx context.Context, obj *model.User) ([]*model.InvoiceOrPayment, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *userResolver) Connections(ctx context.Context, obj *model.User) ([]*model.Connection, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+// Connection returns generated.ConnectionResolver implementation.
+func (r *Resolver) Connection() generated.ConnectionResolver { return &connectionResolver{r} }
+
+// InvoiceOrPayment returns generated.InvoiceOrPaymentResolver implementation.
+func (r *Resolver) InvoiceOrPayment() generated.InvoiceOrPaymentResolver {
+	return &invoiceOrPaymentResolver{r}
+}
+
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
+// User returns generated.UserResolver implementation.
+func (r *Resolver) User() generated.UserResolver { return &userResolver{r} }
+
+type connectionResolver struct{ *Resolver }
+type invoiceOrPaymentResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+type userResolver struct{ *Resolver }

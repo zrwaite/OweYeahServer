@@ -36,8 +36,11 @@ type Config struct {
 }
 
 type ResolverRoot interface {
+	Connection() ConnectionResolver
+	InvoiceOrPayment() InvoiceOrPaymentResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
+	User() UserResolver
 }
 
 type DirectiveRoot struct {
@@ -142,6 +145,12 @@ type ComplexityRoot struct {
 	}
 }
 
+type ConnectionResolver interface {
+	Contact(ctx context.Context, obj *model.Connection) (*model.User, error)
+}
+type InvoiceOrPaymentResolver interface {
+	Connection(ctx context.Context, obj *model.InvoiceOrPayment) (*model.Connection, error)
+}
 type MutationResolver interface {
 	CreateUser(ctx context.Context, input model.UserInput) (*model.UserAuthResult, error)
 	Login(ctx context.Context, input model.UserInput) (*model.UserAuthResult, error)
@@ -153,6 +162,13 @@ type MutationResolver interface {
 type QueryResolver interface {
 	User(ctx context.Context, username string) (*model.UserResult, error)
 	GetFilteredUsers(ctx context.Context, partialUsername string) (*model.UsersResult, error)
+}
+type UserResolver interface {
+	Invoices(ctx context.Context, obj *model.User) ([]*model.InvoiceOrPayment, error)
+
+	Payments(ctx context.Context, obj *model.User) ([]*model.InvoiceOrPayment, error)
+
+	Connections(ctx context.Context, obj *model.User) ([]*model.Connection, error)
 }
 
 type executableSchema struct {
@@ -1085,7 +1101,7 @@ func (ec *executionContext) _Connection_contact(ctx context.Context, field graph
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Contact, nil
+		return ec.resolvers.Connection().Contact(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1106,8 +1122,8 @@ func (ec *executionContext) fieldContext_Connection_contact(ctx context.Context,
 	fc = &graphql.FieldContext{
 		Object:     "Connection",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
@@ -1579,7 +1595,7 @@ func (ec *executionContext) _InvoiceOrPayment_connection(ctx context.Context, fi
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Connection, nil
+		return ec.resolvers.InvoiceOrPayment().Connection(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1600,8 +1616,8 @@ func (ec *executionContext) fieldContext_InvoiceOrPayment_connection(ctx context
 	fc = &graphql.FieldContext{
 		Object:     "InvoiceOrPayment",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
@@ -3267,7 +3283,7 @@ func (ec *executionContext) _User_invoices(ctx context.Context, field graphql.Co
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Invoices, nil
+		return ec.resolvers.User().Invoices(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3288,8 +3304,8 @@ func (ec *executionContext) fieldContext_User_invoices(ctx context.Context, fiel
 	fc = &graphql.FieldContext{
 		Object:     "User",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
@@ -3371,7 +3387,7 @@ func (ec *executionContext) _User_payments(ctx context.Context, field graphql.Co
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Payments, nil
+		return ec.resolvers.User().Payments(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3392,8 +3408,8 @@ func (ec *executionContext) fieldContext_User_payments(ctx context.Context, fiel
 	fc = &graphql.FieldContext{
 		Object:     "User",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
@@ -3475,7 +3491,7 @@ func (ec *executionContext) _User_connections(ctx context.Context, field graphql
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Connections, nil
+		return ec.resolvers.User().Connections(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3496,8 +3512,8 @@ func (ec *executionContext) fieldContext_User_connections(ctx context.Context, f
 	fc = &graphql.FieldContext{
 		Object:     "User",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
@@ -5877,35 +5893,48 @@ func (ec *executionContext) _Connection(ctx context.Context, sel ast.SelectionSe
 			out.Values[i] = ec._Connection_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "contact_username":
 
 			out.Values[i] = ec._Connection_contact_username(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "contact":
+			field := field
 
-			out.Values[i] = ec._Connection_contact(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Connection_contact(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "debt":
 
 			out.Values[i] = ec._Connection_debt(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "created_at":
 
 			out.Values[i] = ec._Connection_created_at(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -5969,49 +5998,62 @@ func (ec *executionContext) _InvoiceOrPayment(ctx context.Context, sel ast.Selec
 			out.Values[i] = ec._InvoiceOrPayment_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "created_by_username":
 
 			out.Values[i] = ec._InvoiceOrPayment_created_by_username(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "created_by":
 
 			out.Values[i] = ec._InvoiceOrPayment_created_by(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "connection_id":
 
 			out.Values[i] = ec._InvoiceOrPayment_connection_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "connection":
+			field := field
 
-			out.Values[i] = ec._InvoiceOrPayment_connection(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._InvoiceOrPayment_connection(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "amount":
 
 			out.Values[i] = ec._InvoiceOrPayment_amount(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "created_at":
 
 			out.Values[i] = ec._InvoiceOrPayment_created_at(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -6378,78 +6420,117 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = ec._User_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "username":
 
 			out.Values[i] = ec._User_username(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "hash":
 
 			out.Values[i] = ec._User_hash(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "display_name":
 
 			out.Values[i] = ec._User_display_name(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "created_at":
 
 			out.Values[i] = ec._User_created_at(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "invoice_ids":
 
 			out.Values[i] = ec._User_invoice_ids(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "invoices":
+			field := field
 
-			out.Values[i] = ec._User_invoices(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._User_invoices(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "payment_ids":
 
 			out.Values[i] = ec._User_payment_ids(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "payments":
+			field := field
 
-			out.Values[i] = ec._User_payments(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._User_payments(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "connection_ids":
 
 			out.Values[i] = ec._User_connection_ids(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "connections":
+			field := field
 
-			out.Values[i] = ec._User_connections(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._User_connections(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -6909,6 +6990,10 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) marshalNConnection2githubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐConnection(ctx context.Context, sel ast.SelectionSet, v model.Connection) graphql.Marshaler {
+	return ec._Connection(ctx, sel, &v)
+}
+
 func (ec *executionContext) marshalNConnection2ᚕᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐConnectionᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Connection) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -7153,6 +7238,10 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNUser2githubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v model.User) graphql.Marshaler {
+	return ec._User(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *model.User) graphql.Marshaler {
