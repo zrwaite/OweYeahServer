@@ -2,7 +2,7 @@ package database
 
 import "go.mongodb.org/mongo-driver/bson"
 
-var bsonIDArray = bson.M{
+var bsonStringArray = bson.M{
 	"bsonType":    "array",
 	"uniqueItems": true,
 	"items":       bson.M{"bsonType": "string"},
@@ -20,9 +20,9 @@ var UsersValidator = bson.M{
 			"hash":           bsonString,
 			"display_name":   bsonString,
 			"created_at":     bsonString,
-			"invoice_ids":    bsonIDArray,
-			"payment_ids":    bsonIDArray,
-			"connection_ids": bsonIDArray,
+			"invoice_ids":    bsonStringArray,
+			"payment_ids":    bsonStringArray,
+			"connection_ids": bsonStringArray,
 		},
 	},
 }
