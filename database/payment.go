@@ -10,6 +10,21 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+func GetPayment(id string) (payment *model.InvoiceOrPayment, status int) {
+	payment = &model.InvoiceOrPayment{}
+	if id == "" {
+		status = 400
+		return
+	}
+	filter, filterSuccess := CreateIdFilter(id)
+	if !filterSuccess {
+		status = 400
+		return
+	}
+	status = Get("payments", filter, payment)
+	return
+}
+
 func CreatePayment(ctx context.Context, input model.InvoiceOrPaymentInput) *model.PaymentResult {
 	paymentResult := &model.PaymentResult{}
 	user, userStatus := GetUser(input.CreatedByUsername)
@@ -55,8 +70,12 @@ func CreatePayment(ctx context.Context, input model.InvoiceOrPaymentInput) *mode
 			paymentResult.Errors = append(paymentResult.Errors, "Failed to add payment to user")
 			return paymentResult
 		}
-		if !AddInvoiceToUser(userConnection.Contact, payment) {
+		if !AddPaymentToUser(userConnection.Contact, payment) {
 			paymentResult.Errors = append(paymentResult.Errors, "Failed to add payment to contact user")
+			return paymentResult
+		}
+		if !SettlePaymentConnectionDebt(user, payment, connection) {
+			paymentResult.Errors = append(paymentResult.Errors, "Failed to settle payment connection debt")
 			return paymentResult
 		}
 		return &model.PaymentResult{
@@ -74,7 +93,7 @@ func AddPaymentToUser(user *model.User, payment *model.InvoiceOrPayment) bool {
 	return UpdateUser(user)
 }
 
-func SettlePaymentConnectionDebt(user *model.User, payment *model.InvoiceOrPayment, connection *model.DatabaseConnection) bool {
+func SettlePaymentConnectionDebt(user *model.User, payment *model.InvoiceOrPayment, connection *model.Connection) bool {
 	if connection.Username1 == user.Username {
 		connection.Debt += payment.Amount
 	} else if connection.Username2 == user.Username {
@@ -86,7 +105,7 @@ func SettlePaymentConnectionDebt(user *model.User, payment *model.InvoiceOrPayme
 }
 
 func UpdatePayment(payment *model.InvoiceOrPayment) bool {
-	update := bson.D{{"$set", payment}}
+	update := bson.D{{Key: "$set", Value: payment}}
 	filter, filterSuccess := CreateIdFilter(payment.ID)
 	if !filterSuccess {
 		return false

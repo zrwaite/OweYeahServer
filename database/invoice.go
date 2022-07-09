@@ -10,6 +10,21 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+func GetInvoice(id string) (invoice *model.InvoiceOrPayment, status int) {
+	invoice = &model.InvoiceOrPayment{}
+	if id == "" {
+		status = 400
+		return
+	}
+	filter, filterSuccess := CreateIdFilter(id)
+	if !filterSuccess {
+		status = 400
+		return
+	}
+	status = Get("invoices", filter, invoice)
+	return
+}
+
 func CreateInvoice(ctx context.Context, input model.InvoiceOrPaymentInput) *model.InvoiceResult {
 	invoiceResult := &model.InvoiceResult{}
 	user, userStatus := GetUser(input.CreatedByUsername)
@@ -78,7 +93,7 @@ func AddInvoiceToUser(user *model.User, invoice *model.InvoiceOrPayment) bool {
 	return UpdateUser(user)
 }
 
-func SettleInvoiceConnectionDebt(user *model.User, invoice *model.InvoiceOrPayment, connection *model.DatabaseConnection) bool {
+func SettleInvoiceConnectionDebt(user *model.User, invoice *model.InvoiceOrPayment, connection *model.Connection) bool {
 	if connection.Username1 == user.Username {
 		connection.Debt -= invoice.Amount
 	} else if connection.Username2 == user.Username {
@@ -90,7 +105,7 @@ func SettleInvoiceConnectionDebt(user *model.User, invoice *model.InvoiceOrPayme
 }
 
 func UpdateInvoice(invoice *model.InvoiceOrPayment) bool {
-	update := bson.D{{"$set", invoice}}
+	update := bson.D{{Key: "$set", Value: invoice}}
 	filter, filterSuccess := CreateIdFilter(invoice.ID)
 	if !filterSuccess {
 		return false

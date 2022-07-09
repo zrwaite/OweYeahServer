@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -10,8 +11,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func GetConnection(id string) (connection *model.DatabaseConnection, status int) {
-	connection = &model.DatabaseConnection{}
+func GetConnection(id string) (connection *model.Connection, status int) {
+	connection = &model.Connection{}
 	if id == "" {
 		status = 400
 		return
@@ -21,23 +22,12 @@ func GetConnection(id string) (connection *model.DatabaseConnection, status int)
 		status = 400
 		return
 	}
-	cursor := mongoDatabase.Collection("connections").FindOne(context.TODO(), filter)
-	if err := cursor.Decode(connection); err != nil {
-		if err.Error() == "mongo: no documents in result" {
-			status = 404
-		} else {
-			fmt.Println("Failed to get connection " + id + " ; " + err.Error())
-			status = 400
-		}
-		return
-	} else {
-		status = 200
-	}
+	status = Get("connections", filter, connection)
 	return
 }
 
-func ParseUserConnection(username string, connection *model.DatabaseConnection) (userConnection *model.Connection, success bool) {
-	userConnection = &model.Connection{
+func ParseUserConnection(username string, connection *model.Connection) (userConnection *model.UserConnection, success bool) {
+	userConnection = &model.UserConnection{
 		ID:        connection.ID,
 		Debt:      connection.Debt,
 		CreatedAt: connection.CreatedAt,
@@ -84,7 +74,7 @@ func CreateConnection(ctx context.Context, username1 string, username2 string) *
 		return connectionResult
 	}
 
-	connection := &model.DatabaseConnection{
+	connection := &model.Connection{
 		Username1: username1,
 		Username2: username2,
 		CreatedAt: time.Now().Format("2006-01-02"),
@@ -111,10 +101,10 @@ func CreateConnection(ctx context.Context, username1 string, username2 string) *
 		return &model.ConnectionResult{
 			Success: true,
 			Connection: &model.Connection{
-				ID:              connection.ID,
-				Contact:         contactUser,
-				ContactUsername: username2,
-				CreatedAt:       time.Now().Format("2006-01-02"),
+				ID:        connection.ID,
+				Username1: username1,
+				Username2: username2,
+				CreatedAt: time.Now().Format("2006-01-02"),
 			},
 		}
 	}
@@ -125,7 +115,7 @@ func AddConnectionToUser(user *model.User, connectionId string) bool {
 	return UpdateUser(user)
 }
 
-func UpdateConnection(connection *model.DatabaseConnection) bool {
+func UpdateConnection(connection *model.Connection) bool {
 	update := bson.D{{"$set", connection}}
 	filter, filterSuccess := CreateIdFilter(connection.ID)
 	if !filterSuccess {
@@ -145,7 +135,7 @@ func UpdateConnection(connection *model.DatabaseConnection) bool {
 
 func FindExistingConnection(username1 string, username2 string) int {
 	filter := bson.D{{"$or", bson.A{bson.D{{"username1", username1}, {"username2", username2}}, bson.D{{"username1", username2}, {"username2", username1}}}}}
-	connection := &model.DatabaseConnection{}
+	connection := &model.Connection{}
 	cursor := mongoDatabase.Collection("connections").FindOne(context.TODO(), filter)
 	if err := cursor.Decode(connection); err != nil {
 		if err.Error() == "mongo: no documents in result" {
@@ -156,4 +146,34 @@ func FindExistingConnection(username1 string, username2 string) int {
 		}
 	}
 	return 200
+}
+
+func ConnectionUser1(ctx context.Context, obj *model.Connection) (*model.User, error) {
+	user, status := GetUser(obj.Username1)
+	if status == 404 {
+		return nil, errors.New("user not found")
+	} else if status == 400 {
+		return nil, errors.New("something went wrong getting user")
+	}
+	return user, nil
+}
+
+func ConnectionUser2(ctx context.Context, obj *model.Connection) (*model.User, error) {
+	user, status := GetUser(obj.Username2)
+	if status == 404 {
+		return nil, errors.New("user not found")
+	} else if status == 400 {
+		return nil, errors.New("something went wrong getting user")
+	}
+	return user, nil
+}
+
+func UserConnectionContact(ctx context.Context, obj *model.UserConnection) (*model.User, error) {
+	contact, status := GetUser(obj.ContactUsername)
+	if status == 404 {
+		return nil, errors.New("user not found")
+	} else if status == 400 {
+		return nil, errors.New("something went wrong getting user")
+	}
+	return contact, nil
 }

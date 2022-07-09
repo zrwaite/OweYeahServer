@@ -18,10 +18,20 @@ type User {
 	payment_ids: [ID!]!
 	payments: [InvoiceOrPayment!]!
 	connection_ids: [ID!]!
-	connections: [Connection!]!
+	connections: [UserConnection!]!
 }
 
 type Connection {
+	id: ID!
+	username1: String!
+	user1: User!
+	username2: String!
+	user2: User!
+	debt: Float!
+	created_at: String!
+}
+
+type UserConnection {
 	id: ID!
 	contact_username: String!
 	contact: User!

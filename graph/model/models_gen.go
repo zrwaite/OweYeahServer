@@ -3,11 +3,13 @@
 package model
 
 type Connection struct {
-	ID              string  `bson:"id"`
-	ContactUsername string  `bson:"contact_username"`
-	Contact         *User   `bson:"contact"`
-	Debt            float64 `bson:"debt"`
-	CreatedAt       string  `bson:"created_at"`
+	ID        string  `bson:"id"`
+	Username1 string  `bson:"username1"`
+	User1     *User   `bson:"user1"`
+	Username2 string  `bson:"username2"`
+	User2     *User   `bson:"user2"`
+	Debt      float64 `bson:"debt"`
+	CreatedAt string  `bson:"created_at"`
 }
 
 type ConnectionResult struct {
@@ -63,6 +65,14 @@ type UserAuthResult struct {
 	User    *User    `bson:"user"`
 	Token   string   `bson:"token"`
 	Errors  []string `bson:"errors"`
+}
+
+type UserConnection struct {
+	ID              string  `bson:"id"`
+	ContactUsername string  `bson:"contact_username"`
+	Contact         *User   `bson:"contact"`
+	Debt            float64 `bson:"debt"`
+	CreatedAt       string  `bson:"created_at"`
 }
 
 type UserInput struct {

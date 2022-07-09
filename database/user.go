@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -18,18 +19,7 @@ func GetUser(username string) (user *model.User, status int) {
 		status = 400
 		return
 	}
-
-	cursor := mongoDatabase.Collection("users").FindOne(context.TODO(), CreateUsernameFilter(username))
-	if err := cursor.Decode(user); err != nil {
-		if err.Error() == "mongo: no documents in result" {
-			status = 404
-		} else {
-			fmt.Println("Failed to get user " + username + " ; " + err.Error())
-			status = 400
-		}
-	} else {
-		status = 200
-	}
+	status = Get("users", CreateUsernameFilter(username), user)
 	return
 }
 
@@ -174,11 +164,61 @@ func DeleteUser(ctx context.Context, username string) *model.Result {
 }
 
 func UpdateUser(user *model.User) bool {
-	update := bson.D{{"$set", user}}
+	update := bson.D{{Key: "$set", Value: user}}
 	_, err := mongoDatabase.Collection("users").UpdateOne(context.TODO(), CreateUsernameFilter(user.Username), update)
 	if err != nil {
 		fmt.Println(err.Error())
 		return false
 	}
 	return true
+}
+
+func UserInvoices(ctx context.Context, obj *model.User) ([]*model.InvoiceOrPayment, error) {
+	var invoices []*model.InvoiceOrPayment
+	for _, invoiceId := range obj.InvoiceIds {
+		invoice, status := GetInvoice(invoiceId)
+		if status == 200 {
+			invoices = append(invoices, invoice)
+		} else if status == 404 {
+			return invoices, errors.New("Invoice " + invoiceId + " not found")
+		} else {
+			return invoices, errors.New("Something went wrong while getting invoice " + invoiceId)
+		}
+	}
+	return invoices, nil
+}
+
+func UserPayments(ctx context.Context, obj *model.User) ([]*model.InvoiceOrPayment, error) {
+	var payments []*model.InvoiceOrPayment
+	for _, paymentId := range obj.PaymentIds {
+		payment, status := GetPayment(paymentId)
+		if status == 200 {
+			payments = append(payments, payment)
+		} else if status == 404 {
+			return payments, errors.New("Payment " + paymentId + " not found")
+		} else {
+			return payments, errors.New("Something went wrong while getting payment " + paymentId)
+		}
+	}
+	return payments, nil
+}
+
+func UserConnections(ctx context.Context, obj *model.User) ([]*model.UserConnection, error) {
+	var connections []*model.UserConnection
+	for _, connectionId := range obj.ConnectionIds {
+		databaseConnection, status := GetConnection(connectionId)
+		if status == 200 {
+			connection, parseSuccess := ParseUserConnection(obj.Username, databaseConnection)
+			if parseSuccess {
+				connections = append(connections, connection)
+			} else {
+				return connections, errors.New("Failed to parse connection " + connectionId)
+			}
+		} else if status == 404 {
+			return connections, errors.New("Connection " + connectionId + " not found")
+		} else {
+			return connections, errors.New("Something went wrong while getting connection " + connectionId)
+		}
+	}
+	return connections, nil
 }

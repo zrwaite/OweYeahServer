@@ -41,6 +41,7 @@ type ResolverRoot interface {
 	Mutation() MutationResolver
 	Query() QueryResolver
 	User() UserResolver
+	UserConnection() UserConnectionResolver
 }
 
 type DirectiveRoot struct {
@@ -48,11 +49,13 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Connection struct {
-		Contact         func(childComplexity int) int
-		ContactUsername func(childComplexity int) int
-		CreatedAt       func(childComplexity int) int
-		Debt            func(childComplexity int) int
-		ID              func(childComplexity int) int
+		CreatedAt func(childComplexity int) int
+		Debt      func(childComplexity int) int
+		ID        func(childComplexity int) int
+		User1     func(childComplexity int) int
+		User2     func(childComplexity int) int
+		Username1 func(childComplexity int) int
+		Username2 func(childComplexity int) int
 	}
 
 	ConnectionResult struct {
@@ -132,6 +135,14 @@ type ComplexityRoot struct {
 		User    func(childComplexity int) int
 	}
 
+	UserConnection struct {
+		Contact         func(childComplexity int) int
+		ContactUsername func(childComplexity int) int
+		CreatedAt       func(childComplexity int) int
+		Debt            func(childComplexity int) int
+		ID              func(childComplexity int) int
+	}
+
 	UserResult struct {
 		Errors  func(childComplexity int) int
 		Success func(childComplexity int) int
@@ -146,7 +157,9 @@ type ComplexityRoot struct {
 }
 
 type ConnectionResolver interface {
-	Contact(ctx context.Context, obj *model.Connection) (*model.User, error)
+	User1(ctx context.Context, obj *model.Connection) (*model.User, error)
+
+	User2(ctx context.Context, obj *model.Connection) (*model.User, error)
 }
 type InvoiceOrPaymentResolver interface {
 	Connection(ctx context.Context, obj *model.InvoiceOrPayment) (*model.Connection, error)
@@ -168,7 +181,10 @@ type UserResolver interface {
 
 	Payments(ctx context.Context, obj *model.User) ([]*model.InvoiceOrPayment, error)
 
-	Connections(ctx context.Context, obj *model.User) ([]*model.Connection, error)
+	Connections(ctx context.Context, obj *model.User) ([]*model.UserConnection, error)
+}
+type UserConnectionResolver interface {
+	Contact(ctx context.Context, obj *model.UserConnection) (*model.User, error)
 }
 
 type executableSchema struct {
@@ -185,20 +201,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e}
 	_ = ec
 	switch typeName + "." + field {
-
-	case "Connection.contact":
-		if e.complexity.Connection.Contact == nil {
-			break
-		}
-
-		return e.complexity.Connection.Contact(childComplexity), true
-
-	case "Connection.contact_username":
-		if e.complexity.Connection.ContactUsername == nil {
-			break
-		}
-
-		return e.complexity.Connection.ContactUsername(childComplexity), true
 
 	case "Connection.created_at":
 		if e.complexity.Connection.CreatedAt == nil {
@@ -220,6 +222,34 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Connection.ID(childComplexity), true
+
+	case "Connection.user1":
+		if e.complexity.Connection.User1 == nil {
+			break
+		}
+
+		return e.complexity.Connection.User1(childComplexity), true
+
+	case "Connection.user2":
+		if e.complexity.Connection.User2 == nil {
+			break
+		}
+
+		return e.complexity.Connection.User2(childComplexity), true
+
+	case "Connection.username1":
+		if e.complexity.Connection.Username1 == nil {
+			break
+		}
+
+		return e.complexity.Connection.Username1(childComplexity), true
+
+	case "Connection.username2":
+		if e.complexity.Connection.Username2 == nil {
+			break
+		}
+
+		return e.complexity.Connection.Username2(childComplexity), true
 
 	case "ConnectionResult.connection":
 		if e.complexity.ConnectionResult.Connection == nil {
@@ -590,6 +620,41 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.UserAuthResult.User(childComplexity), true
 
+	case "UserConnection.contact":
+		if e.complexity.UserConnection.Contact == nil {
+			break
+		}
+
+		return e.complexity.UserConnection.Contact(childComplexity), true
+
+	case "UserConnection.contact_username":
+		if e.complexity.UserConnection.ContactUsername == nil {
+			break
+		}
+
+		return e.complexity.UserConnection.ContactUsername(childComplexity), true
+
+	case "UserConnection.created_at":
+		if e.complexity.UserConnection.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.UserConnection.CreatedAt(childComplexity), true
+
+	case "UserConnection.debt":
+		if e.complexity.UserConnection.Debt == nil {
+			break
+		}
+
+		return e.complexity.UserConnection.Debt(childComplexity), true
+
+	case "UserConnection.id":
+		if e.complexity.UserConnection.ID == nil {
+			break
+		}
+
+		return e.complexity.UserConnection.ID(childComplexity), true
+
 	case "UserResult.errors":
 		if e.complexity.UserResult.Errors == nil {
 			break
@@ -722,10 +787,20 @@ type User {
 	payment_ids: [ID!]!
 	payments: [InvoiceOrPayment!]!
 	connection_ids: [ID!]!
-	connections: [Connection!]!
+	connections: [UserConnection!]!
 }
 
 type Connection {
+	id: ID!
+	username1: String!
+	user1: User!
+	username2: String!
+	user2: User!
+	debt: Float!
+	created_at: String!
+}
+
+type UserConnection {
 	id: ID!
 	contact_username: String!
 	contact: User!
@@ -1043,8 +1118,8 @@ func (ec *executionContext) fieldContext_Connection_id(ctx context.Context, fiel
 	return fc, nil
 }
 
-func (ec *executionContext) _Connection_contact_username(ctx context.Context, field graphql.CollectedField, obj *model.Connection) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Connection_contact_username(ctx, field)
+func (ec *executionContext) _Connection_username1(ctx context.Context, field graphql.CollectedField, obj *model.Connection) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Connection_username1(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1057,7 +1132,7 @@ func (ec *executionContext) _Connection_contact_username(ctx context.Context, fi
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.ContactUsername, nil
+		return obj.Username1, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1074,7 +1149,7 @@ func (ec *executionContext) _Connection_contact_username(ctx context.Context, fi
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Connection_contact_username(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Connection_username1(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Connection",
 		Field:      field,
@@ -1087,8 +1162,8 @@ func (ec *executionContext) fieldContext_Connection_contact_username(ctx context
 	return fc, nil
 }
 
-func (ec *executionContext) _Connection_contact(ctx context.Context, field graphql.CollectedField, obj *model.Connection) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Connection_contact(ctx, field)
+func (ec *executionContext) _Connection_user1(ctx context.Context, field graphql.CollectedField, obj *model.Connection) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Connection_user1(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1101,7 +1176,7 @@ func (ec *executionContext) _Connection_contact(ctx context.Context, field graph
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Connection().Contact(rctx, obj)
+		return ec.resolvers.Connection().User1(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1118,7 +1193,119 @@ func (ec *executionContext) _Connection_contact(ctx context.Context, field graph
 	return ec.marshalNUser2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Connection_contact(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Connection_user1(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Connection",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_User_id(ctx, field)
+			case "username":
+				return ec.fieldContext_User_username(ctx, field)
+			case "hash":
+				return ec.fieldContext_User_hash(ctx, field)
+			case "display_name":
+				return ec.fieldContext_User_display_name(ctx, field)
+			case "created_at":
+				return ec.fieldContext_User_created_at(ctx, field)
+			case "invoice_ids":
+				return ec.fieldContext_User_invoice_ids(ctx, field)
+			case "invoices":
+				return ec.fieldContext_User_invoices(ctx, field)
+			case "payment_ids":
+				return ec.fieldContext_User_payment_ids(ctx, field)
+			case "payments":
+				return ec.fieldContext_User_payments(ctx, field)
+			case "connection_ids":
+				return ec.fieldContext_User_connection_ids(ctx, field)
+			case "connections":
+				return ec.fieldContext_User_connections(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Connection_username2(ctx context.Context, field graphql.CollectedField, obj *model.Connection) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Connection_username2(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Username2, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Connection_username2(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Connection",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Connection_user2(ctx context.Context, field graphql.CollectedField, obj *model.Connection) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Connection_user2(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Connection().User2(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.User)
+	fc.Result = res
+	return ec.marshalNUser2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Connection_user2(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Connection",
 		Field:      field,
@@ -1325,10 +1512,14 @@ func (ec *executionContext) fieldContext_ConnectionResult_connection(ctx context
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Connection_id(ctx, field)
-			case "contact_username":
-				return ec.fieldContext_Connection_contact_username(ctx, field)
-			case "contact":
-				return ec.fieldContext_Connection_contact(ctx, field)
+			case "username1":
+				return ec.fieldContext_Connection_username1(ctx, field)
+			case "user1":
+				return ec.fieldContext_Connection_user1(ctx, field)
+			case "username2":
+				return ec.fieldContext_Connection_username2(ctx, field)
+			case "user2":
+				return ec.fieldContext_Connection_user2(ctx, field)
 			case "debt":
 				return ec.fieldContext_Connection_debt(ctx, field)
 			case "created_at":
@@ -1622,10 +1813,14 @@ func (ec *executionContext) fieldContext_InvoiceOrPayment_connection(ctx context
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Connection_id(ctx, field)
-			case "contact_username":
-				return ec.fieldContext_Connection_contact_username(ctx, field)
-			case "contact":
-				return ec.fieldContext_Connection_contact(ctx, field)
+			case "username1":
+				return ec.fieldContext_Connection_username1(ctx, field)
+			case "user1":
+				return ec.fieldContext_Connection_user1(ctx, field)
+			case "username2":
+				return ec.fieldContext_Connection_username2(ctx, field)
+			case "user2":
+				return ec.fieldContext_Connection_user2(ctx, field)
 			case "debt":
 				return ec.fieldContext_Connection_debt(ctx, field)
 			case "created_at":
@@ -2464,10 +2659,14 @@ func (ec *executionContext) fieldContext_PartialUser_connections(ctx context.Con
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Connection_id(ctx, field)
-			case "contact_username":
-				return ec.fieldContext_Connection_contact_username(ctx, field)
-			case "contact":
-				return ec.fieldContext_Connection_contact(ctx, field)
+			case "username1":
+				return ec.fieldContext_Connection_username1(ctx, field)
+			case "user1":
+				return ec.fieldContext_Connection_user1(ctx, field)
+			case "username2":
+				return ec.fieldContext_Connection_username2(ctx, field)
+			case "user2":
+				return ec.fieldContext_Connection_user2(ctx, field)
 			case "debt":
 				return ec.fieldContext_Connection_debt(ctx, field)
 			case "created_at":
@@ -3503,9 +3702,9 @@ func (ec *executionContext) _User_connections(ctx context.Context, field graphql
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Connection)
+	res := resTmp.([]*model.UserConnection)
 	fc.Result = res
-	return ec.marshalNConnection2ᚕᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐConnectionᚄ(ctx, field.Selections, res)
+	return ec.marshalNUserConnection2ᚕᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUserConnectionᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_User_connections(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -3517,17 +3716,17 @@ func (ec *executionContext) fieldContext_User_connections(ctx context.Context, f
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
-				return ec.fieldContext_Connection_id(ctx, field)
+				return ec.fieldContext_UserConnection_id(ctx, field)
 			case "contact_username":
-				return ec.fieldContext_Connection_contact_username(ctx, field)
+				return ec.fieldContext_UserConnection_contact_username(ctx, field)
 			case "contact":
-				return ec.fieldContext_Connection_contact(ctx, field)
+				return ec.fieldContext_UserConnection_contact(ctx, field)
 			case "debt":
-				return ec.fieldContext_Connection_debt(ctx, field)
+				return ec.fieldContext_UserConnection_debt(ctx, field)
 			case "created_at":
-				return ec.fieldContext_Connection_created_at(ctx, field)
+				return ec.fieldContext_UserConnection_created_at(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type Connection", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type UserConnection", field.Name)
 		},
 	}
 	return fc, nil
@@ -3717,6 +3916,250 @@ func (ec *executionContext) _UserAuthResult_errors(ctx context.Context, field gr
 func (ec *executionContext) fieldContext_UserAuthResult_errors(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "UserAuthResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UserConnection_id(ctx context.Context, field graphql.CollectedField, obj *model.UserConnection) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserConnection_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UserConnection_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UserConnection",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UserConnection_contact_username(ctx context.Context, field graphql.CollectedField, obj *model.UserConnection) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserConnection_contact_username(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ContactUsername, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UserConnection_contact_username(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UserConnection",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UserConnection_contact(ctx context.Context, field graphql.CollectedField, obj *model.UserConnection) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserConnection_contact(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.UserConnection().Contact(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.User)
+	fc.Result = res
+	return ec.marshalNUser2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UserConnection_contact(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UserConnection",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_User_id(ctx, field)
+			case "username":
+				return ec.fieldContext_User_username(ctx, field)
+			case "hash":
+				return ec.fieldContext_User_hash(ctx, field)
+			case "display_name":
+				return ec.fieldContext_User_display_name(ctx, field)
+			case "created_at":
+				return ec.fieldContext_User_created_at(ctx, field)
+			case "invoice_ids":
+				return ec.fieldContext_User_invoice_ids(ctx, field)
+			case "invoices":
+				return ec.fieldContext_User_invoices(ctx, field)
+			case "payment_ids":
+				return ec.fieldContext_User_payment_ids(ctx, field)
+			case "payments":
+				return ec.fieldContext_User_payments(ctx, field)
+			case "connection_ids":
+				return ec.fieldContext_User_connection_ids(ctx, field)
+			case "connections":
+				return ec.fieldContext_User_connections(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UserConnection_debt(ctx context.Context, field graphql.CollectedField, obj *model.UserConnection) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserConnection_debt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Debt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(float64)
+	fc.Result = res
+	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UserConnection_debt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UserConnection",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Float does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UserConnection_created_at(ctx context.Context, field graphql.CollectedField, obj *model.UserConnection) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserConnection_created_at(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UserConnection_created_at(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UserConnection",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -5895,14 +6338,14 @@ func (ec *executionContext) _Connection(ctx context.Context, sel ast.SelectionSe
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "contact_username":
+		case "username1":
 
-			out.Values[i] = ec._Connection_contact_username(ctx, field, obj)
+			out.Values[i] = ec._Connection_username1(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "contact":
+		case "user1":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -5911,7 +6354,34 @@ func (ec *executionContext) _Connection(ctx context.Context, sel ast.SelectionSe
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Connection_contact(ctx, field, obj)
+				res = ec._Connection_user1(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "username2":
+
+			out.Values[i] = ec._Connection_username2(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "user2":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Connection_user2(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -6574,6 +7044,75 @@ func (ec *executionContext) _UserAuthResult(ctx context.Context, sel ast.Selecti
 
 			out.Values[i] = ec._UserAuthResult_errors(ctx, field, obj)
 
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var userConnectionImplementors = []string{"UserConnection"}
+
+func (ec *executionContext) _UserConnection(ctx context.Context, sel ast.SelectionSet, obj *model.UserConnection) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, userConnectionImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UserConnection")
+		case "id":
+
+			out.Values[i] = ec._UserConnection_id(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "contact_username":
+
+			out.Values[i] = ec._UserConnection_contact_username(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "contact":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._UserConnection_contact(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "debt":
+
+			out.Values[i] = ec._UserConnection_debt(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "created_at":
+
+			out.Values[i] = ec._UserConnection_created_at(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -7266,6 +7805,60 @@ func (ec *executionContext) marshalNUserAuthResult2ᚖgithubᚗcomᚋzrwaiteᚋO
 		return graphql.Null
 	}
 	return ec._UserAuthResult(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNUserConnection2ᚕᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUserConnectionᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.UserConnection) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNUserConnection2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUserConnection(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNUserConnection2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUserConnection(ctx context.Context, sel ast.SelectionSet, v *model.UserConnection) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._UserConnection(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNUserInput2githubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUserInput(ctx context.Context, v interface{}) (model.UserInput, error) {

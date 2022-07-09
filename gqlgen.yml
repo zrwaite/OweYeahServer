@@ -69,6 +69,12 @@ models:
                 resolver: true
     Connection:
         fields:
+            user1:
+                resolver: true
+            user2:
+                resolver: true
+    UserConnection:
+        fields:
             contact:
                 resolver: true
     InvoiceOrPayment:
