@@ -2,6 +2,6 @@ services:
     server:
         env_file: './.env'
         build: './'
-        image: 'zrwaite/owemate:1.0.0'
+        image: 'zrwaite/owemate:1.0.1'
         ports:
             - '8007:8007'
