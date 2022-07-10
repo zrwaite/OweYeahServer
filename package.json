@@ -4,7 +4,6 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"start": "cat .env && ./clueless-cartel-server",
 		"dev": "nodemon --watch './**/*.go' --signal SIGTERM --exec 'go' run server.go",
 		"generate": "go run github.com/99designs/gqlgen generate && go run graph_addons/searchandreplace.go"
 	},
