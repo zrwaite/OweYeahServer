@@ -6,4 +6,4 @@ RUN go build -o ./clueless-cartel-server
 
 EXPOSE 8007
 
-CMD [ "./clueless-cartel-server" ]
+CMD [ "npm" "run" "start" ]
