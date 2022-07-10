@@ -1,3 +1,3 @@
 # Owemate
 
-Server for Greyson's app project
+Go Graphql API for OweMate group debt tracking app
