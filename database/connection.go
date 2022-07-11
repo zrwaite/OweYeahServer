@@ -116,7 +116,7 @@ func AddConnectionToUser(user *model.User, connectionId string) bool {
 }
 
 func UpdateConnection(connection *model.Connection) bool {
-	update := bson.D{{"$set", connection}}
+	update := bson.D{{Key: "$set", Value: connection}}
 	filter, filterSuccess := CreateIdFilter(connection.ID)
 	if !filterSuccess {
 		return false
