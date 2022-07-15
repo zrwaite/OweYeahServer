@@ -13,7 +13,7 @@ type User struct {
 	PaymentIds    []string            `bson:"payment_ids"`
 	Payments      []*InvoiceOrPayment `bson:"payments"`
 	ConnectionIds []string            `bson:"connection_ids"`
-	Connections   []*Connection       `bson:"connections"`
+	Connections   []*UserConnection   `bson:"connections"`
 }
 
 func (user *User) CreateHash(password string) error {
