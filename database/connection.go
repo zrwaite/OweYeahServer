@@ -48,6 +48,18 @@ func ParseUserConnection(username string, connection *model.Connection) (userCon
 	return
 }
 
+func UpdateUserConnection(userConnection *model.UserConnection) bool {
+	connection, status := GetConnection(userConnection.ID)
+	if status == 404 {
+		return false
+	} else if status == 400 {
+		return false
+	}
+	connection.CreatedAt = userConnection.CreatedAt
+	connection.Debt = userConnection.Debt
+	return UpdateConnection(connection)
+}
+
 func CreateConnection(ctx context.Context, username1 string, username2 string) *model.ConnectionResult {
 	connectionResult := &model.ConnectionResult{}
 	user, userStatus := GetUser(username1)

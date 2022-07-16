@@ -1,55 +1,69 @@
 package database
 
 import (
+	"errors"
+
 	"github.com/zrwaite/OweMate/graph/model"
+	"github.com/zrwaite/OweMate/utils"
 )
 
-func ResolveCycles(user *model.User, connection *model.UserConnection) {
+func ResolveCycles(user *model.User, connection *model.UserConnection) (err error) {
 	for {
-		// cycleFound, cycleContactUsernamesFound := DetectNestedDebts(5, user, true, user.Username, connection.ID, connection.Debt, []string{})
-		// if !cycleFound {
-		// 	break
-		// }
-		// for _, username := range cycleContactUsernamesFound {
-
-		// }
+		cycleFound, cycleConenctions, maxCycleDebt := DetectNestedDebts(5, user, true, user, connection, connection.Debt, []*model.User{}, []*model.UserConnection{})
+		if !cycleFound {
+			break
+		}
+		for _, connection := range cycleConenctions {
+			connection.Debt -= maxCycleDebt
+			success := UpdateUserConnection(connection)
+			if !success {
+				return errors.New("failed to update connection")
+			}
+		}
 	}
+	return nil
 }
 
 func DetectNestedDebts(
 	depth int,
 	user *model.User,
 	root bool,
-	rootUsername string,
-	parentConnectionId string,
+	rootUser *model.User,
+	parentConnection *model.UserConnection,
 	maxDebt float64,
-	cycleUsers []*model.User) (cycleFound bool, cycleContactUsernamesFound []string) {
+	cycleUsers []*model.User,
+	cycleConnections []*model.UserConnection,
+) (cycleFound bool, cycleConnectionsFound []*model.UserConnection, maxCycleDebt float64) {
 	if depth <= 0 {
-		return
+		return false, nil, 0
 	}
 	for _, connection := range user.Connections {
+		newCycleConnections := append(cycleConnections, connection)
 		positiveMinDebt := maxDebt > 0
-		if connection.ID == parentConnectionId || // don't go back up tree
+		if connection.ID == parentConnection.ID || // don't go back up tree
 			connection.Debt == 0 || // no debt to settle
 			(!root && //While not at the root node:
 				(connection.Debt < 0 && positiveMinDebt || // Negative debt and positive parent debt
 					connection.Debt > 0 && !positiveMinDebt)) { // Positive debt and negative parent debt
 			continue
 		}
-		// userInCycle, usernameIndex := utils.UserBinarySearch(cycleContactUsernames, connection.ContactUsername)
-		// if userInCycle {
-		// 	continue
-		// }
-		// newCycleContactUsernames := utils.ArrayInsert(cycleContactUsernames, usernameIndex, connection.ContactUsername)
+		userInCycle, usernameIndex := utils.UserBinarySearch(cycleUsers, connection.Contact)
+		if userInCycle {
+			continue
+		}
+		newCycleUsers := utils.ArrayInsert(cycleUsers, usernameIndex, connection.Contact)
 
 		if connection.Debt < maxDebt && positiveMinDebt || connection.Debt > maxDebt && !positiveMinDebt {
 			// Set new minimum debt for the traversal
 			maxDebt = connection.Debt
 		}
-		if connection.ContactUsername == rootUsername {
-
+		if connection.ContactUsername == rootUser.Username {
+			return true, newCycleConnections, maxDebt
 		}
-		// DetectNestedDebts(depth-1, connection.Contact, false, rootUsername, connection.ID, maxDebt, newCycleContactUsernames)
+		nestedCycleFound, nestedCycleConnections, newMaxDebt := DetectNestedDebts(depth-1, connection.Contact, false, rootUser, connection, maxDebt, newCycleUsers, newCycleConnections)
+		if nestedCycleFound {
+			return true, nestedCycleConnections, newMaxDebt
+		}
 	}
-	return
+	return false, nil, 0
 }
