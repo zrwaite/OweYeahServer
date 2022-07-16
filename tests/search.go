@@ -26,7 +26,7 @@ var BinarySearchTests = Test{
 	Name: "Binary Search Test",
 	Function: func() (bool, error) {
 		for _, test := range tests {
-			found, index := utils.BinarySearch(test.List, test.Item)
+			found, index := utils.StandardBinarySearch(test.List, test.Item)
 			if found != test.Found || index != test.Index {
 				return false, errors.New("output did not match input")
 			}
@@ -39,7 +39,7 @@ var LinearSearchTests = Test{
 	Name: "Linear Search Test",
 	Function: func() (bool, error) {
 		for _, test := range tests {
-			found, index := utils.BinarySearch(test.List, test.Item)
+			found, index := utils.StandardBinarySearch(test.List, test.Item)
 			if found != test.Found || index != test.Index {
 				return false, errors.New("output did not match input")
 			}
