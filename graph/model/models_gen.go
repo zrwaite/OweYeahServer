@@ -9,7 +9,7 @@ type Connection struct {
 	Username2 string  `bson:"username2"`
 	User2     *User   `bson:"user2"`
 	Debt      float64 `bson:"debt"`
-	CreatedAt string  `bson:"created_at"`
+	CreatedAt string  `bson:"createdAt"`
 }
 
 type ConnectionResult struct {
@@ -20,17 +20,17 @@ type ConnectionResult struct {
 
 type InvoiceOrPayment struct {
 	ID                string      `bson:"id"`
-	CreatedByUsername string      `bson:"created_by_username"`
-	CreatedBy         *User       `bson:"created_by"`
-	ConnectionID      string      `bson:"connection_id"`
+	CreatedByUsername string      `bson:"createdByUsername"`
+	CreatedBy         *User       `bson:"createdBy"`
+	ConnectionID      string      `bson:"connectionId"`
 	Connection        *Connection `bson:"connection"`
 	Amount            float64     `bson:"amount"`
-	CreatedAt         string      `bson:"created_at"`
+	CreatedAt         string      `bson:"createdAt"`
 }
 
 type InvoiceOrPaymentInput struct {
-	CreatedByUsername string  `bson:"created_by_username"`
-	ConnectionID      string  `bson:"connection_id"`
+	CreatedByUsername string  `bson:"createdByUsername"`
+	ConnectionID      string  `bson:"connectionId"`
 	Amount            float64 `bson:"amount"`
 }
 
@@ -43,10 +43,10 @@ type InvoiceResult struct {
 type PartialUser struct {
 	ID            string        `bson:"id"`
 	Username      string        `bson:"username"`
-	DisplayName   string        `bson:"display_name"`
-	ConnectionIds []string      `bson:"connection_ids"`
+	DisplayName   string        `bson:"displayName"`
+	ConnectionIds []string      `bson:"connectionIds"`
 	Connections   []*Connection `bson:"connections"`
-	CreatedAt     string        `bson:"created_at"`
+	CreatedAt     string        `bson:"createdAt"`
 }
 
 type PaymentResult struct {
@@ -69,10 +69,10 @@ type UserAuthResult struct {
 
 type UserConnection struct {
 	ID              string  `bson:"id"`
-	ContactUsername string  `bson:"contact_username"`
+	ContactUsername string  `bson:"contactUsername"`
 	Contact         *User   `bson:"contact"`
 	Debt            float64 `bson:"debt"`
-	CreatedAt       string  `bson:"created_at"`
+	CreatedAt       string  `bson:"createdAt"`
 }
 
 type UserInput struct {

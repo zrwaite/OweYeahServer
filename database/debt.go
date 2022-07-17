@@ -11,7 +11,6 @@ import (
 func ResolveCycles(user *model.User, connection *model.UserConnection) (err error) {
 	for {
 		cycleFound, cycleConenctions, maxCycleDebt := DetectNestedDebts(5, user, true, user, connection, connection.Debt, []*model.User{}, []*model.UserConnection{})
-		fmt.Println("Cycle found:", cycleFound, "with max debt:", maxCycleDebt)
 		if !cycleFound {
 			break
 		}
@@ -46,7 +45,6 @@ func DetectNestedDebts(
 	}
 	for _, connection := range userConnections {
 		newCycleConnections := append(cycleConnections, connection)
-		fmt.Println(newCycleConnections)
 		positiveMinDebt := maxDebt > 0
 		if connection.ID == parentConnection.ID || // don't go back up tree
 			connection.Debt == 0 || // no debt to settle

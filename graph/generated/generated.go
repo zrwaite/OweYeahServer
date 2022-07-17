@@ -202,7 +202,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	_ = ec
 	switch typeName + "." + field {
 
-	case "Connection.created_at":
+	case "Connection.createdAt":
 		if e.complexity.Connection.CreatedAt == nil {
 			break
 		}
@@ -286,28 +286,28 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.InvoiceOrPayment.Connection(childComplexity), true
 
-	case "InvoiceOrPayment.connection_id":
+	case "InvoiceOrPayment.connectionId":
 		if e.complexity.InvoiceOrPayment.ConnectionID == nil {
 			break
 		}
 
 		return e.complexity.InvoiceOrPayment.ConnectionID(childComplexity), true
 
-	case "InvoiceOrPayment.created_at":
+	case "InvoiceOrPayment.createdAt":
 		if e.complexity.InvoiceOrPayment.CreatedAt == nil {
 			break
 		}
 
 		return e.complexity.InvoiceOrPayment.CreatedAt(childComplexity), true
 
-	case "InvoiceOrPayment.created_by":
+	case "InvoiceOrPayment.createdBy":
 		if e.complexity.InvoiceOrPayment.CreatedBy == nil {
 			break
 		}
 
 		return e.complexity.InvoiceOrPayment.CreatedBy(childComplexity), true
 
-	case "InvoiceOrPayment.created_by_username":
+	case "InvoiceOrPayment.createdByUsername":
 		if e.complexity.InvoiceOrPayment.CreatedByUsername == nil {
 			break
 		}
@@ -414,7 +414,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.Login(childComplexity, args["input"].(model.UserInput)), true
 
-	case "PartialUser.connection_ids":
+	case "PartialUser.connectionIds":
 		if e.complexity.PartialUser.ConnectionIds == nil {
 			break
 		}
@@ -428,14 +428,14 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.PartialUser.Connections(childComplexity), true
 
-	case "PartialUser.created_at":
+	case "PartialUser.createdAt":
 		if e.complexity.PartialUser.CreatedAt == nil {
 			break
 		}
 
 		return e.complexity.PartialUser.CreatedAt(childComplexity), true
 
-	case "PartialUser.display_name":
+	case "PartialUser.displayName":
 		if e.complexity.PartialUser.DisplayName == nil {
 			break
 		}
@@ -515,7 +515,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Result.Success(childComplexity), true
 
-	case "User.connection_ids":
+	case "User.connectionIds":
 		if e.complexity.User.ConnectionIds == nil {
 			break
 		}
@@ -529,14 +529,14 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.User.Connections(childComplexity), true
 
-	case "User.created_at":
+	case "User.createdAt":
 		if e.complexity.User.CreatedAt == nil {
 			break
 		}
 
 		return e.complexity.User.CreatedAt(childComplexity), true
 
-	case "User.display_name":
+	case "User.displayName":
 		if e.complexity.User.DisplayName == nil {
 			break
 		}
@@ -557,7 +557,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.User.ID(childComplexity), true
 
-	case "User.invoice_ids":
+	case "User.invoiceIds":
 		if e.complexity.User.InvoiceIds == nil {
 			break
 		}
@@ -571,7 +571,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.User.Invoices(childComplexity), true
 
-	case "User.payment_ids":
+	case "User.paymentIds":
 		if e.complexity.User.PaymentIds == nil {
 			break
 		}
@@ -627,14 +627,14 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.UserConnection.Contact(childComplexity), true
 
-	case "UserConnection.contact_username":
+	case "UserConnection.contactUsername":
 		if e.complexity.UserConnection.ContactUsername == nil {
 			break
 		}
 
 		return e.complexity.UserConnection.ContactUsername(childComplexity), true
 
-	case "UserConnection.created_at":
+	case "UserConnection.createdAt":
 		if e.complexity.UserConnection.CreatedAt == nil {
 			break
 		}
@@ -770,23 +770,23 @@ var sources = []*ast.Source{
 	{Name: "../schema.graphqls", Input: `type PartialUser {
 	id: ID!
 	username: String!
-	display_name: String!
-	connection_ids: [ID!]!
+	displayName: String!
+	connectionIds: [ID!]!
 	connections: [Connection!]!
-	created_at: String!
+	createdAt: String!
 }
 
 type User {
 	id: ID!
 	username: String!
 	hash: String!
-	display_name: String!
-	created_at: String!
-	invoice_ids: [ID!]!
+	displayName: String!
+	createdAt: String!
+	invoiceIds: [ID!]!
 	invoices: [InvoiceOrPayment!]!
-	payment_ids: [ID!]!
+	paymentIds: [ID!]!
 	payments: [InvoiceOrPayment!]!
-	connection_ids: [ID!]!
+	connectionIds: [ID!]!
 	connections: [UserConnection!]!
 }
 
@@ -797,15 +797,15 @@ type Connection {
 	username2: String!
 	user2: User!
 	debt: Float!
-	created_at: String!
+	createdAt: String!
 }
 
 type UserConnection {
 	id: ID!
-	contact_username: String!
+	contactUsername: String!
 	contact: User!
 	debt: Float!
-	created_at: String!
+	createdAt: String!
 }
 
 type UserResult {
@@ -835,12 +835,12 @@ type UserAuthResult {
 
 type InvoiceOrPayment {
 	id: ID!
-	created_by_username: String!
-	created_by: User!
-	connection_id: ID!
+	createdByUsername: String!
+	createdBy: User!
+	connectionId: ID!
 	connection: Connection!
 	amount: Float!
-	created_at: String!
+	createdAt: String!
 }
 
 type InvoiceResult {
@@ -866,8 +866,8 @@ input UserInput {
 }
 
 input InvoiceOrPaymentInput {
-	created_by_username: String!
-	connection_id: ID!
+	createdByUsername: String!
+	connectionId: ID!
 	amount: Float!
 }
 
@@ -1207,20 +1207,20 @@ func (ec *executionContext) fieldContext_Connection_user1(ctx context.Context, f
 				return ec.fieldContext_User_username(ctx, field)
 			case "hash":
 				return ec.fieldContext_User_hash(ctx, field)
-			case "display_name":
-				return ec.fieldContext_User_display_name(ctx, field)
-			case "created_at":
-				return ec.fieldContext_User_created_at(ctx, field)
-			case "invoice_ids":
-				return ec.fieldContext_User_invoice_ids(ctx, field)
+			case "displayName":
+				return ec.fieldContext_User_displayName(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_User_createdAt(ctx, field)
+			case "invoiceIds":
+				return ec.fieldContext_User_invoiceIds(ctx, field)
 			case "invoices":
 				return ec.fieldContext_User_invoices(ctx, field)
-			case "payment_ids":
-				return ec.fieldContext_User_payment_ids(ctx, field)
+			case "paymentIds":
+				return ec.fieldContext_User_paymentIds(ctx, field)
 			case "payments":
 				return ec.fieldContext_User_payments(ctx, field)
-			case "connection_ids":
-				return ec.fieldContext_User_connection_ids(ctx, field)
+			case "connectionIds":
+				return ec.fieldContext_User_connectionIds(ctx, field)
 			case "connections":
 				return ec.fieldContext_User_connections(ctx, field)
 			}
@@ -1319,20 +1319,20 @@ func (ec *executionContext) fieldContext_Connection_user2(ctx context.Context, f
 				return ec.fieldContext_User_username(ctx, field)
 			case "hash":
 				return ec.fieldContext_User_hash(ctx, field)
-			case "display_name":
-				return ec.fieldContext_User_display_name(ctx, field)
-			case "created_at":
-				return ec.fieldContext_User_created_at(ctx, field)
-			case "invoice_ids":
-				return ec.fieldContext_User_invoice_ids(ctx, field)
+			case "displayName":
+				return ec.fieldContext_User_displayName(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_User_createdAt(ctx, field)
+			case "invoiceIds":
+				return ec.fieldContext_User_invoiceIds(ctx, field)
 			case "invoices":
 				return ec.fieldContext_User_invoices(ctx, field)
-			case "payment_ids":
-				return ec.fieldContext_User_payment_ids(ctx, field)
+			case "paymentIds":
+				return ec.fieldContext_User_paymentIds(ctx, field)
 			case "payments":
 				return ec.fieldContext_User_payments(ctx, field)
-			case "connection_ids":
-				return ec.fieldContext_User_connection_ids(ctx, field)
+			case "connectionIds":
+				return ec.fieldContext_User_connectionIds(ctx, field)
 			case "connections":
 				return ec.fieldContext_User_connections(ctx, field)
 			}
@@ -1386,8 +1386,8 @@ func (ec *executionContext) fieldContext_Connection_debt(ctx context.Context, fi
 	return fc, nil
 }
 
-func (ec *executionContext) _Connection_created_at(ctx context.Context, field graphql.CollectedField, obj *model.Connection) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Connection_created_at(ctx, field)
+func (ec *executionContext) _Connection_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.Connection) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Connection_createdAt(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1417,7 +1417,7 @@ func (ec *executionContext) _Connection_created_at(ctx context.Context, field gr
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Connection_created_at(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Connection_createdAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Connection",
 		Field:      field,
@@ -1522,8 +1522,8 @@ func (ec *executionContext) fieldContext_ConnectionResult_connection(ctx context
 				return ec.fieldContext_Connection_user2(ctx, field)
 			case "debt":
 				return ec.fieldContext_Connection_debt(ctx, field)
-			case "created_at":
-				return ec.fieldContext_Connection_created_at(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Connection_createdAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Connection", field.Name)
 		},
@@ -1616,8 +1616,8 @@ func (ec *executionContext) fieldContext_InvoiceOrPayment_id(ctx context.Context
 	return fc, nil
 }
 
-func (ec *executionContext) _InvoiceOrPayment_created_by_username(ctx context.Context, field graphql.CollectedField, obj *model.InvoiceOrPayment) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_InvoiceOrPayment_created_by_username(ctx, field)
+func (ec *executionContext) _InvoiceOrPayment_createdByUsername(ctx context.Context, field graphql.CollectedField, obj *model.InvoiceOrPayment) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_InvoiceOrPayment_createdByUsername(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1647,7 +1647,7 @@ func (ec *executionContext) _InvoiceOrPayment_created_by_username(ctx context.Co
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_InvoiceOrPayment_created_by_username(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_InvoiceOrPayment_createdByUsername(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "InvoiceOrPayment",
 		Field:      field,
@@ -1660,8 +1660,8 @@ func (ec *executionContext) fieldContext_InvoiceOrPayment_created_by_username(ct
 	return fc, nil
 }
 
-func (ec *executionContext) _InvoiceOrPayment_created_by(ctx context.Context, field graphql.CollectedField, obj *model.InvoiceOrPayment) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_InvoiceOrPayment_created_by(ctx, field)
+func (ec *executionContext) _InvoiceOrPayment_createdBy(ctx context.Context, field graphql.CollectedField, obj *model.InvoiceOrPayment) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_InvoiceOrPayment_createdBy(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1691,7 +1691,7 @@ func (ec *executionContext) _InvoiceOrPayment_created_by(ctx context.Context, fi
 	return ec.marshalNUser2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_InvoiceOrPayment_created_by(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_InvoiceOrPayment_createdBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "InvoiceOrPayment",
 		Field:      field,
@@ -1705,20 +1705,20 @@ func (ec *executionContext) fieldContext_InvoiceOrPayment_created_by(ctx context
 				return ec.fieldContext_User_username(ctx, field)
 			case "hash":
 				return ec.fieldContext_User_hash(ctx, field)
-			case "display_name":
-				return ec.fieldContext_User_display_name(ctx, field)
-			case "created_at":
-				return ec.fieldContext_User_created_at(ctx, field)
-			case "invoice_ids":
-				return ec.fieldContext_User_invoice_ids(ctx, field)
+			case "displayName":
+				return ec.fieldContext_User_displayName(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_User_createdAt(ctx, field)
+			case "invoiceIds":
+				return ec.fieldContext_User_invoiceIds(ctx, field)
 			case "invoices":
 				return ec.fieldContext_User_invoices(ctx, field)
-			case "payment_ids":
-				return ec.fieldContext_User_payment_ids(ctx, field)
+			case "paymentIds":
+				return ec.fieldContext_User_paymentIds(ctx, field)
 			case "payments":
 				return ec.fieldContext_User_payments(ctx, field)
-			case "connection_ids":
-				return ec.fieldContext_User_connection_ids(ctx, field)
+			case "connectionIds":
+				return ec.fieldContext_User_connectionIds(ctx, field)
 			case "connections":
 				return ec.fieldContext_User_connections(ctx, field)
 			}
@@ -1728,8 +1728,8 @@ func (ec *executionContext) fieldContext_InvoiceOrPayment_created_by(ctx context
 	return fc, nil
 }
 
-func (ec *executionContext) _InvoiceOrPayment_connection_id(ctx context.Context, field graphql.CollectedField, obj *model.InvoiceOrPayment) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_InvoiceOrPayment_connection_id(ctx, field)
+func (ec *executionContext) _InvoiceOrPayment_connectionId(ctx context.Context, field graphql.CollectedField, obj *model.InvoiceOrPayment) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_InvoiceOrPayment_connectionId(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1759,7 +1759,7 @@ func (ec *executionContext) _InvoiceOrPayment_connection_id(ctx context.Context,
 	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_InvoiceOrPayment_connection_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_InvoiceOrPayment_connectionId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "InvoiceOrPayment",
 		Field:      field,
@@ -1823,8 +1823,8 @@ func (ec *executionContext) fieldContext_InvoiceOrPayment_connection(ctx context
 				return ec.fieldContext_Connection_user2(ctx, field)
 			case "debt":
 				return ec.fieldContext_Connection_debt(ctx, field)
-			case "created_at":
-				return ec.fieldContext_Connection_created_at(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Connection_createdAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Connection", field.Name)
 		},
@@ -1876,8 +1876,8 @@ func (ec *executionContext) fieldContext_InvoiceOrPayment_amount(ctx context.Con
 	return fc, nil
 }
 
-func (ec *executionContext) _InvoiceOrPayment_created_at(ctx context.Context, field graphql.CollectedField, obj *model.InvoiceOrPayment) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_InvoiceOrPayment_created_at(ctx, field)
+func (ec *executionContext) _InvoiceOrPayment_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.InvoiceOrPayment) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_InvoiceOrPayment_createdAt(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1907,7 +1907,7 @@ func (ec *executionContext) _InvoiceOrPayment_created_at(ctx context.Context, fi
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_InvoiceOrPayment_created_at(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_InvoiceOrPayment_createdAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "InvoiceOrPayment",
 		Field:      field,
@@ -2002,18 +2002,18 @@ func (ec *executionContext) fieldContext_InvoiceResult_invoice(ctx context.Conte
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_InvoiceOrPayment_id(ctx, field)
-			case "created_by_username":
-				return ec.fieldContext_InvoiceOrPayment_created_by_username(ctx, field)
-			case "created_by":
-				return ec.fieldContext_InvoiceOrPayment_created_by(ctx, field)
-			case "connection_id":
-				return ec.fieldContext_InvoiceOrPayment_connection_id(ctx, field)
+			case "createdByUsername":
+				return ec.fieldContext_InvoiceOrPayment_createdByUsername(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_InvoiceOrPayment_createdBy(ctx, field)
+			case "connectionId":
+				return ec.fieldContext_InvoiceOrPayment_connectionId(ctx, field)
 			case "connection":
 				return ec.fieldContext_InvoiceOrPayment_connection(ctx, field)
 			case "amount":
 				return ec.fieldContext_InvoiceOrPayment_amount(ctx, field)
-			case "created_at":
-				return ec.fieldContext_InvoiceOrPayment_created_at(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_InvoiceOrPayment_createdAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type InvoiceOrPayment", field.Name)
 		},
@@ -2530,8 +2530,8 @@ func (ec *executionContext) fieldContext_PartialUser_username(ctx context.Contex
 	return fc, nil
 }
 
-func (ec *executionContext) _PartialUser_display_name(ctx context.Context, field graphql.CollectedField, obj *model.PartialUser) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_PartialUser_display_name(ctx, field)
+func (ec *executionContext) _PartialUser_displayName(ctx context.Context, field graphql.CollectedField, obj *model.PartialUser) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PartialUser_displayName(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2561,7 +2561,7 @@ func (ec *executionContext) _PartialUser_display_name(ctx context.Context, field
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_PartialUser_display_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_PartialUser_displayName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "PartialUser",
 		Field:      field,
@@ -2574,8 +2574,8 @@ func (ec *executionContext) fieldContext_PartialUser_display_name(ctx context.Co
 	return fc, nil
 }
 
-func (ec *executionContext) _PartialUser_connection_ids(ctx context.Context, field graphql.CollectedField, obj *model.PartialUser) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_PartialUser_connection_ids(ctx, field)
+func (ec *executionContext) _PartialUser_connectionIds(ctx context.Context, field graphql.CollectedField, obj *model.PartialUser) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PartialUser_connectionIds(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2605,7 +2605,7 @@ func (ec *executionContext) _PartialUser_connection_ids(ctx context.Context, fie
 	return ec.marshalNID2ᚕstringᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_PartialUser_connection_ids(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_PartialUser_connectionIds(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "PartialUser",
 		Field:      field,
@@ -2669,8 +2669,8 @@ func (ec *executionContext) fieldContext_PartialUser_connections(ctx context.Con
 				return ec.fieldContext_Connection_user2(ctx, field)
 			case "debt":
 				return ec.fieldContext_Connection_debt(ctx, field)
-			case "created_at":
-				return ec.fieldContext_Connection_created_at(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Connection_createdAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Connection", field.Name)
 		},
@@ -2678,8 +2678,8 @@ func (ec *executionContext) fieldContext_PartialUser_connections(ctx context.Con
 	return fc, nil
 }
 
-func (ec *executionContext) _PartialUser_created_at(ctx context.Context, field graphql.CollectedField, obj *model.PartialUser) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_PartialUser_created_at(ctx, field)
+func (ec *executionContext) _PartialUser_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.PartialUser) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PartialUser_createdAt(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2709,7 +2709,7 @@ func (ec *executionContext) _PartialUser_created_at(ctx context.Context, field g
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_PartialUser_created_at(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_PartialUser_createdAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "PartialUser",
 		Field:      field,
@@ -2804,18 +2804,18 @@ func (ec *executionContext) fieldContext_PaymentResult_payment(ctx context.Conte
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_InvoiceOrPayment_id(ctx, field)
-			case "created_by_username":
-				return ec.fieldContext_InvoiceOrPayment_created_by_username(ctx, field)
-			case "created_by":
-				return ec.fieldContext_InvoiceOrPayment_created_by(ctx, field)
-			case "connection_id":
-				return ec.fieldContext_InvoiceOrPayment_connection_id(ctx, field)
+			case "createdByUsername":
+				return ec.fieldContext_InvoiceOrPayment_createdByUsername(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_InvoiceOrPayment_createdBy(ctx, field)
+			case "connectionId":
+				return ec.fieldContext_InvoiceOrPayment_connectionId(ctx, field)
 			case "connection":
 				return ec.fieldContext_InvoiceOrPayment_connection(ctx, field)
 			case "amount":
 				return ec.fieldContext_InvoiceOrPayment_amount(ctx, field)
-			case "created_at":
-				return ec.fieldContext_InvoiceOrPayment_created_at(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_InvoiceOrPayment_createdAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type InvoiceOrPayment", field.Name)
 		},
@@ -3336,8 +3336,8 @@ func (ec *executionContext) fieldContext_User_hash(ctx context.Context, field gr
 	return fc, nil
 }
 
-func (ec *executionContext) _User_display_name(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_User_display_name(ctx, field)
+func (ec *executionContext) _User_displayName(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_User_displayName(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -3367,7 +3367,7 @@ func (ec *executionContext) _User_display_name(ctx context.Context, field graphq
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_User_display_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_User_displayName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "User",
 		Field:      field,
@@ -3380,8 +3380,8 @@ func (ec *executionContext) fieldContext_User_display_name(ctx context.Context, 
 	return fc, nil
 }
 
-func (ec *executionContext) _User_created_at(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_User_created_at(ctx, field)
+func (ec *executionContext) _User_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_User_createdAt(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -3411,7 +3411,7 @@ func (ec *executionContext) _User_created_at(ctx context.Context, field graphql.
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_User_created_at(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_User_createdAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "User",
 		Field:      field,
@@ -3424,8 +3424,8 @@ func (ec *executionContext) fieldContext_User_created_at(ctx context.Context, fi
 	return fc, nil
 }
 
-func (ec *executionContext) _User_invoice_ids(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_User_invoice_ids(ctx, field)
+func (ec *executionContext) _User_invoiceIds(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_User_invoiceIds(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -3455,7 +3455,7 @@ func (ec *executionContext) _User_invoice_ids(ctx context.Context, field graphql
 	return ec.marshalNID2ᚕstringᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_User_invoice_ids(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_User_invoiceIds(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "User",
 		Field:      field,
@@ -3509,18 +3509,18 @@ func (ec *executionContext) fieldContext_User_invoices(ctx context.Context, fiel
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_InvoiceOrPayment_id(ctx, field)
-			case "created_by_username":
-				return ec.fieldContext_InvoiceOrPayment_created_by_username(ctx, field)
-			case "created_by":
-				return ec.fieldContext_InvoiceOrPayment_created_by(ctx, field)
-			case "connection_id":
-				return ec.fieldContext_InvoiceOrPayment_connection_id(ctx, field)
+			case "createdByUsername":
+				return ec.fieldContext_InvoiceOrPayment_createdByUsername(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_InvoiceOrPayment_createdBy(ctx, field)
+			case "connectionId":
+				return ec.fieldContext_InvoiceOrPayment_connectionId(ctx, field)
 			case "connection":
 				return ec.fieldContext_InvoiceOrPayment_connection(ctx, field)
 			case "amount":
 				return ec.fieldContext_InvoiceOrPayment_amount(ctx, field)
-			case "created_at":
-				return ec.fieldContext_InvoiceOrPayment_created_at(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_InvoiceOrPayment_createdAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type InvoiceOrPayment", field.Name)
 		},
@@ -3528,8 +3528,8 @@ func (ec *executionContext) fieldContext_User_invoices(ctx context.Context, fiel
 	return fc, nil
 }
 
-func (ec *executionContext) _User_payment_ids(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_User_payment_ids(ctx, field)
+func (ec *executionContext) _User_paymentIds(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_User_paymentIds(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -3559,7 +3559,7 @@ func (ec *executionContext) _User_payment_ids(ctx context.Context, field graphql
 	return ec.marshalNID2ᚕstringᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_User_payment_ids(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_User_paymentIds(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "User",
 		Field:      field,
@@ -3613,18 +3613,18 @@ func (ec *executionContext) fieldContext_User_payments(ctx context.Context, fiel
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_InvoiceOrPayment_id(ctx, field)
-			case "created_by_username":
-				return ec.fieldContext_InvoiceOrPayment_created_by_username(ctx, field)
-			case "created_by":
-				return ec.fieldContext_InvoiceOrPayment_created_by(ctx, field)
-			case "connection_id":
-				return ec.fieldContext_InvoiceOrPayment_connection_id(ctx, field)
+			case "createdByUsername":
+				return ec.fieldContext_InvoiceOrPayment_createdByUsername(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_InvoiceOrPayment_createdBy(ctx, field)
+			case "connectionId":
+				return ec.fieldContext_InvoiceOrPayment_connectionId(ctx, field)
 			case "connection":
 				return ec.fieldContext_InvoiceOrPayment_connection(ctx, field)
 			case "amount":
 				return ec.fieldContext_InvoiceOrPayment_amount(ctx, field)
-			case "created_at":
-				return ec.fieldContext_InvoiceOrPayment_created_at(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_InvoiceOrPayment_createdAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type InvoiceOrPayment", field.Name)
 		},
@@ -3632,8 +3632,8 @@ func (ec *executionContext) fieldContext_User_payments(ctx context.Context, fiel
 	return fc, nil
 }
 
-func (ec *executionContext) _User_connection_ids(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_User_connection_ids(ctx, field)
+func (ec *executionContext) _User_connectionIds(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_User_connectionIds(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -3663,7 +3663,7 @@ func (ec *executionContext) _User_connection_ids(ctx context.Context, field grap
 	return ec.marshalNID2ᚕstringᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_User_connection_ids(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_User_connectionIds(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "User",
 		Field:      field,
@@ -3717,14 +3717,14 @@ func (ec *executionContext) fieldContext_User_connections(ctx context.Context, f
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_UserConnection_id(ctx, field)
-			case "contact_username":
-				return ec.fieldContext_UserConnection_contact_username(ctx, field)
+			case "contactUsername":
+				return ec.fieldContext_UserConnection_contactUsername(ctx, field)
 			case "contact":
 				return ec.fieldContext_UserConnection_contact(ctx, field)
 			case "debt":
 				return ec.fieldContext_UserConnection_debt(ctx, field)
-			case "created_at":
-				return ec.fieldContext_UserConnection_created_at(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_UserConnection_createdAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type UserConnection", field.Name)
 		},
@@ -3818,20 +3818,20 @@ func (ec *executionContext) fieldContext_UserAuthResult_user(ctx context.Context
 				return ec.fieldContext_User_username(ctx, field)
 			case "hash":
 				return ec.fieldContext_User_hash(ctx, field)
-			case "display_name":
-				return ec.fieldContext_User_display_name(ctx, field)
-			case "created_at":
-				return ec.fieldContext_User_created_at(ctx, field)
-			case "invoice_ids":
-				return ec.fieldContext_User_invoice_ids(ctx, field)
+			case "displayName":
+				return ec.fieldContext_User_displayName(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_User_createdAt(ctx, field)
+			case "invoiceIds":
+				return ec.fieldContext_User_invoiceIds(ctx, field)
 			case "invoices":
 				return ec.fieldContext_User_invoices(ctx, field)
-			case "payment_ids":
-				return ec.fieldContext_User_payment_ids(ctx, field)
+			case "paymentIds":
+				return ec.fieldContext_User_paymentIds(ctx, field)
 			case "payments":
 				return ec.fieldContext_User_payments(ctx, field)
-			case "connection_ids":
-				return ec.fieldContext_User_connection_ids(ctx, field)
+			case "connectionIds":
+				return ec.fieldContext_User_connectionIds(ctx, field)
 			case "connections":
 				return ec.fieldContext_User_connections(ctx, field)
 			}
@@ -3970,8 +3970,8 @@ func (ec *executionContext) fieldContext_UserConnection_id(ctx context.Context, 
 	return fc, nil
 }
 
-func (ec *executionContext) _UserConnection_contact_username(ctx context.Context, field graphql.CollectedField, obj *model.UserConnection) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_UserConnection_contact_username(ctx, field)
+func (ec *executionContext) _UserConnection_contactUsername(ctx context.Context, field graphql.CollectedField, obj *model.UserConnection) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserConnection_contactUsername(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -4001,7 +4001,7 @@ func (ec *executionContext) _UserConnection_contact_username(ctx context.Context
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_UserConnection_contact_username(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_UserConnection_contactUsername(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "UserConnection",
 		Field:      field,
@@ -4059,20 +4059,20 @@ func (ec *executionContext) fieldContext_UserConnection_contact(ctx context.Cont
 				return ec.fieldContext_User_username(ctx, field)
 			case "hash":
 				return ec.fieldContext_User_hash(ctx, field)
-			case "display_name":
-				return ec.fieldContext_User_display_name(ctx, field)
-			case "created_at":
-				return ec.fieldContext_User_created_at(ctx, field)
-			case "invoice_ids":
-				return ec.fieldContext_User_invoice_ids(ctx, field)
+			case "displayName":
+				return ec.fieldContext_User_displayName(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_User_createdAt(ctx, field)
+			case "invoiceIds":
+				return ec.fieldContext_User_invoiceIds(ctx, field)
 			case "invoices":
 				return ec.fieldContext_User_invoices(ctx, field)
-			case "payment_ids":
-				return ec.fieldContext_User_payment_ids(ctx, field)
+			case "paymentIds":
+				return ec.fieldContext_User_paymentIds(ctx, field)
 			case "payments":
 				return ec.fieldContext_User_payments(ctx, field)
-			case "connection_ids":
-				return ec.fieldContext_User_connection_ids(ctx, field)
+			case "connectionIds":
+				return ec.fieldContext_User_connectionIds(ctx, field)
 			case "connections":
 				return ec.fieldContext_User_connections(ctx, field)
 			}
@@ -4126,8 +4126,8 @@ func (ec *executionContext) fieldContext_UserConnection_debt(ctx context.Context
 	return fc, nil
 }
 
-func (ec *executionContext) _UserConnection_created_at(ctx context.Context, field graphql.CollectedField, obj *model.UserConnection) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_UserConnection_created_at(ctx, field)
+func (ec *executionContext) _UserConnection_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.UserConnection) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserConnection_createdAt(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -4157,7 +4157,7 @@ func (ec *executionContext) _UserConnection_created_at(ctx context.Context, fiel
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_UserConnection_created_at(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_UserConnection_createdAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "UserConnection",
 		Field:      field,
@@ -4256,20 +4256,20 @@ func (ec *executionContext) fieldContext_UserResult_user(ctx context.Context, fi
 				return ec.fieldContext_User_username(ctx, field)
 			case "hash":
 				return ec.fieldContext_User_hash(ctx, field)
-			case "display_name":
-				return ec.fieldContext_User_display_name(ctx, field)
-			case "created_at":
-				return ec.fieldContext_User_created_at(ctx, field)
-			case "invoice_ids":
-				return ec.fieldContext_User_invoice_ids(ctx, field)
+			case "displayName":
+				return ec.fieldContext_User_displayName(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_User_createdAt(ctx, field)
+			case "invoiceIds":
+				return ec.fieldContext_User_invoiceIds(ctx, field)
 			case "invoices":
 				return ec.fieldContext_User_invoices(ctx, field)
-			case "payment_ids":
-				return ec.fieldContext_User_payment_ids(ctx, field)
+			case "paymentIds":
+				return ec.fieldContext_User_paymentIds(ctx, field)
 			case "payments":
 				return ec.fieldContext_User_payments(ctx, field)
-			case "connection_ids":
-				return ec.fieldContext_User_connection_ids(ctx, field)
+			case "connectionIds":
+				return ec.fieldContext_User_connectionIds(ctx, field)
 			case "connections":
 				return ec.fieldContext_User_connections(ctx, field)
 			}
@@ -4406,20 +4406,20 @@ func (ec *executionContext) fieldContext_UsersResult_users(ctx context.Context, 
 				return ec.fieldContext_User_username(ctx, field)
 			case "hash":
 				return ec.fieldContext_User_hash(ctx, field)
-			case "display_name":
-				return ec.fieldContext_User_display_name(ctx, field)
-			case "created_at":
-				return ec.fieldContext_User_created_at(ctx, field)
-			case "invoice_ids":
-				return ec.fieldContext_User_invoice_ids(ctx, field)
+			case "displayName":
+				return ec.fieldContext_User_displayName(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_User_createdAt(ctx, field)
+			case "invoiceIds":
+				return ec.fieldContext_User_invoiceIds(ctx, field)
 			case "invoices":
 				return ec.fieldContext_User_invoices(ctx, field)
-			case "payment_ids":
-				return ec.fieldContext_User_payment_ids(ctx, field)
+			case "paymentIds":
+				return ec.fieldContext_User_paymentIds(ctx, field)
 			case "payments":
 				return ec.fieldContext_User_payments(ctx, field)
-			case "connection_ids":
-				return ec.fieldContext_User_connection_ids(ctx, field)
+			case "connectionIds":
+				return ec.fieldContext_User_connectionIds(ctx, field)
 			case "connections":
 				return ec.fieldContext_User_connections(ctx, field)
 			}
@@ -6252,18 +6252,18 @@ func (ec *executionContext) unmarshalInputInvoiceOrPaymentInput(ctx context.Cont
 
 	for k, v := range asMap {
 		switch k {
-		case "created_by_username":
+		case "createdByUsername":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("created_by_username"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdByUsername"))
 			it.CreatedByUsername, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
-		case "connection_id":
+		case "connectionId":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("connection_id"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("connectionId"))
 			it.ConnectionID, err = ec.unmarshalNID2string(ctx, v)
 			if err != nil {
 				return it, err
@@ -6399,9 +6399,9 @@ func (ec *executionContext) _Connection(ctx context.Context, sel ast.SelectionSe
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "created_at":
+		case "createdAt":
 
-			out.Values[i] = ec._Connection_created_at(ctx, field, obj)
+			out.Values[i] = ec._Connection_createdAt(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
@@ -6470,23 +6470,23 @@ func (ec *executionContext) _InvoiceOrPayment(ctx context.Context, sel ast.Selec
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "created_by_username":
+		case "createdByUsername":
 
-			out.Values[i] = ec._InvoiceOrPayment_created_by_username(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
-		case "created_by":
-
-			out.Values[i] = ec._InvoiceOrPayment_created_by(ctx, field, obj)
+			out.Values[i] = ec._InvoiceOrPayment_createdByUsername(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "connection_id":
+		case "createdBy":
 
-			out.Values[i] = ec._InvoiceOrPayment_connection_id(ctx, field, obj)
+			out.Values[i] = ec._InvoiceOrPayment_createdBy(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "connectionId":
+
+			out.Values[i] = ec._InvoiceOrPayment_connectionId(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
@@ -6518,9 +6518,9 @@ func (ec *executionContext) _InvoiceOrPayment(ctx context.Context, sel ast.Selec
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "created_at":
+		case "createdAt":
 
-			out.Values[i] = ec._InvoiceOrPayment_created_at(ctx, field, obj)
+			out.Values[i] = ec._InvoiceOrPayment_createdAt(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
@@ -6680,16 +6680,16 @@ func (ec *executionContext) _PartialUser(ctx context.Context, sel ast.SelectionS
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "display_name":
+		case "displayName":
 
-			out.Values[i] = ec._PartialUser_display_name(ctx, field, obj)
+			out.Values[i] = ec._PartialUser_displayName(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "connection_ids":
+		case "connectionIds":
 
-			out.Values[i] = ec._PartialUser_connection_ids(ctx, field, obj)
+			out.Values[i] = ec._PartialUser_connectionIds(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -6701,9 +6701,9 @@ func (ec *executionContext) _PartialUser(ctx context.Context, sel ast.SelectionS
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "created_at":
+		case "createdAt":
 
-			out.Values[i] = ec._PartialUser_created_at(ctx, field, obj)
+			out.Values[i] = ec._PartialUser_createdAt(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -6906,23 +6906,23 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "display_name":
+		case "displayName":
 
-			out.Values[i] = ec._User_display_name(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
-		case "created_at":
-
-			out.Values[i] = ec._User_created_at(ctx, field, obj)
+			out.Values[i] = ec._User_displayName(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "invoice_ids":
+		case "createdAt":
 
-			out.Values[i] = ec._User_invoice_ids(ctx, field, obj)
+			out.Values[i] = ec._User_createdAt(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "invoiceIds":
+
+			out.Values[i] = ec._User_invoiceIds(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
@@ -6947,9 +6947,9 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 				return innerFunc(ctx)
 
 			})
-		case "payment_ids":
+		case "paymentIds":
 
-			out.Values[i] = ec._User_payment_ids(ctx, field, obj)
+			out.Values[i] = ec._User_paymentIds(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
@@ -6974,9 +6974,9 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 				return innerFunc(ctx)
 
 			})
-		case "connection_ids":
+		case "connectionIds":
 
-			out.Values[i] = ec._User_connection_ids(ctx, field, obj)
+			out.Values[i] = ec._User_connectionIds(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
@@ -7072,9 +7072,9 @@ func (ec *executionContext) _UserConnection(ctx context.Context, sel ast.Selecti
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "contact_username":
+		case "contactUsername":
 
-			out.Values[i] = ec._UserConnection_contact_username(ctx, field, obj)
+			out.Values[i] = ec._UserConnection_contactUsername(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
@@ -7106,9 +7106,9 @@ func (ec *executionContext) _UserConnection(ctx context.Context, sel ast.Selecti
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "created_at":
+		case "createdAt":
 
-			out.Values[i] = ec._UserConnection_created_at(ctx, field, obj)
+			out.Values[i] = ec._UserConnection_createdAt(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)

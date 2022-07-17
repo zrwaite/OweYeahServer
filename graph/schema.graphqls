@@ -1,23 +1,23 @@
 type PartialUser {
 	id: ID!
 	username: String!
-	display_name: String!
-	connection_ids: [ID!]!
+	displayName: String!
+	connectionIds: [ID!]!
 	connections: [Connection!]!
-	created_at: String!
+	createdAt: String!
 }
 
 type User {
 	id: ID!
 	username: String!
 	hash: String!
-	display_name: String!
-	created_at: String!
-	invoice_ids: [ID!]!
+	displayName: String!
+	createdAt: String!
+	invoiceIds: [ID!]!
 	invoices: [InvoiceOrPayment!]!
-	payment_ids: [ID!]!
+	paymentIds: [ID!]!
 	payments: [InvoiceOrPayment!]!
-	connection_ids: [ID!]!
+	connectionIds: [ID!]!
 	connections: [UserConnection!]!
 }
 
@@ -28,15 +28,15 @@ type Connection {
 	username2: String!
 	user2: User!
 	debt: Float!
-	created_at: String!
+	createdAt: String!
 }
 
 type UserConnection {
 	id: ID!
-	contact_username: String!
+	contactUsername: String!
 	contact: User!
 	debt: Float!
-	created_at: String!
+	createdAt: String!
 }
 
 type UserResult {
@@ -66,12 +66,12 @@ type UserAuthResult {
 
 type InvoiceOrPayment {
 	id: ID!
-	created_by_username: String!
-	created_by: User!
-	connection_id: ID!
+	createdByUsername: String!
+	createdBy: User!
+	connectionId: ID!
 	connection: Connection!
 	amount: Float!
-	created_at: String!
+	createdAt: String!
 }
 
 type InvoiceResult {
@@ -97,8 +97,8 @@ input UserInput {
 }
 
 input InvoiceOrPaymentInput {
-	created_by_username: String!
-	connection_id: ID!
+	createdByUsername: String!
+	connectionId: ID!
 	amount: Float!
 }
 

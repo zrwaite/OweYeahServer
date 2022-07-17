@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math"
 	"time"
 
 	"github.com/zrwaite/OweMate/graph/model"
@@ -33,10 +34,10 @@ func ParseUserConnection(username string, connection *model.Connection) (userCon
 	}
 	if connection.Username1 == username {
 		userConnection.ContactUsername = connection.Username2
-		userConnection.Debt = connection.Debt
+		userConnection.Debt = -connection.Debt
 	} else if connection.Username2 == username {
 		userConnection.ContactUsername = connection.Username1
-		userConnection.Debt = -connection.Debt
+		userConnection.Debt = connection.Debt
 	} else {
 		return
 	}
@@ -129,6 +130,7 @@ func AddConnectionToUser(user *model.User, connectionId string) bool {
 }
 
 func UpdateConnection(connection *model.Connection) bool {
+	connection.Debt = math.Round(connection.Debt*100) / 100
 	update := bson.D{{Key: "$set", Value: connection}}
 	filter, filterSuccess := CreateIdFilter(connection.ID)
 	if !filterSuccess {

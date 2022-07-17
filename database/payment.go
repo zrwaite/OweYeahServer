@@ -101,7 +101,7 @@ func SettlePaymentConnectionDebt(user *model.User, payment *model.InvoiceOrPayme
 	} else {
 		return false
 	}
-	return true
+	return UpdateConnection(connection)
 }
 
 func UpdatePayment(payment *model.InvoiceOrPayment) bool {
