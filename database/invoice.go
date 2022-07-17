@@ -78,6 +78,10 @@ func CreateInvoice(ctx context.Context, input model.InvoiceOrPaymentInput) *mode
 			invoiceResult.Errors = append(invoiceResult.Errors, "Failed to settle invoice connection debt")
 			return invoiceResult
 		}
+		if err := ResolveCycles(user, userConnection); err != nil {
+			invoiceResult.Errors = append(invoiceResult.Errors, "Failed to resolve cycles")
+			return invoiceResult
+		}
 		return &model.InvoiceResult{
 			Success: true,
 			Invoice: invoice,
@@ -101,7 +105,7 @@ func SettleInvoiceConnectionDebt(user *model.User, invoice *model.InvoiceOrPayme
 	} else {
 		return false
 	}
-	return true
+	return UpdateConnection(connection)
 }
 
 func UpdateInvoice(invoice *model.InvoiceOrPayment) bool {

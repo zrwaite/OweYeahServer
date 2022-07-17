@@ -204,21 +204,25 @@ func UserPayments(ctx context.Context, obj *model.User) ([]*model.InvoiceOrPayme
 }
 
 func UserConnections(ctx context.Context, obj *model.User) ([]*model.UserConnection, error) {
-	var connections []*model.UserConnection
-	for _, connectionId := range obj.ConnectionIds {
+	return GetUserConnections(obj.ConnectionIds, obj.Username)
+}
+
+func GetUserConnections(userConnectionIds []string, username string) ([]*model.UserConnection, error) {
+	var userConnections []*model.UserConnection
+	for _, connectionId := range userConnectionIds {
 		databaseConnection, status := GetConnection(connectionId)
 		if status == 200 {
-			connection, parseSuccess := ParseUserConnection(obj.Username, databaseConnection)
+			userConnection, parseSuccess := ParseUserConnection(username, databaseConnection)
 			if parseSuccess {
-				connections = append(connections, connection)
+				userConnections = append(userConnections, userConnection)
 			} else {
-				return connections, errors.New("Failed to parse connection " + connectionId)
+				return userConnections, errors.New("Failed to parse connection " + connectionId)
 			}
 		} else if status == 404 {
-			return connections, errors.New("Connection " + connectionId + " not found")
+			return userConnections, errors.New("Connection " + connectionId + " not found")
 		} else {
-			return connections, errors.New("Something went wrong while getting connection " + connectionId)
+			return userConnections, errors.New("Something went wrong while getting connection " + connectionId)
 		}
 	}
-	return connections, nil
+	return userConnections, nil
 }

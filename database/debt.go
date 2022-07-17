@@ -2,6 +2,7 @@ package database
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/zrwaite/OweMate/graph/model"
 	"github.com/zrwaite/OweMate/utils"
@@ -10,6 +11,7 @@ import (
 func ResolveCycles(user *model.User, connection *model.UserConnection) (err error) {
 	for {
 		cycleFound, cycleConenctions, maxCycleDebt := DetectNestedDebts(5, user, true, user, connection, connection.Debt, []*model.User{}, []*model.UserConnection{})
+		fmt.Println("Cycle found:", cycleFound, "with max debt:", maxCycleDebt)
 		if !cycleFound {
 			break
 		}
@@ -37,8 +39,14 @@ func DetectNestedDebts(
 	if depth <= 0 {
 		return false, nil, 0
 	}
-	for _, connection := range user.Connections {
+	userConnections, err := GetUserConnections(user.ConnectionIds, user.Username)
+	if err != nil {
+		fmt.Println("Failed to get user connections:", err)
+		return false, nil, 0
+	}
+	for _, connection := range userConnections {
 		newCycleConnections := append(cycleConnections, connection)
+		fmt.Println(newCycleConnections)
 		positiveMinDebt := maxDebt > 0
 		if connection.ID == parentConnection.ID || // don't go back up tree
 			connection.Debt == 0 || // no debt to settle
@@ -47,11 +55,17 @@ func DetectNestedDebts(
 					connection.Debt > 0 && !positiveMinDebt)) { // Positive debt and negative parent debt
 			continue
 		}
+
 		userInCycle, usernameIndex := utils.UserBinarySearch(cycleUsers, connection.Contact)
 		if userInCycle {
 			continue
 		}
-		newCycleUsers := utils.ArrayInsert(cycleUsers, usernameIndex, connection.Contact)
+		connectionContact, err := GetUserConnectionContact(connection.ContactUsername)
+		if err != nil {
+			fmt.Println("Failed to get user connection contact:", err)
+			return false, nil, 0
+		}
+		newCycleUsers := utils.ArrayInsert(cycleUsers, usernameIndex, connectionContact)
 
 		if connection.Debt < maxDebt && positiveMinDebt || connection.Debt > maxDebt && !positiveMinDebt {
 			// Set new minimum debt for the traversal
@@ -60,7 +74,7 @@ func DetectNestedDebts(
 		if connection.ContactUsername == rootUser.Username {
 			return true, newCycleConnections, maxDebt
 		}
-		nestedCycleFound, nestedCycleConnections, newMaxDebt := DetectNestedDebts(depth-1, connection.Contact, false, rootUser, connection, maxDebt, newCycleUsers, newCycleConnections)
+		nestedCycleFound, nestedCycleConnections, newMaxDebt := DetectNestedDebts(depth-1, connectionContact, false, rootUser, connection, maxDebt, newCycleUsers, newCycleConnections)
 		if nestedCycleFound {
 			return true, nestedCycleConnections, newMaxDebt
 		}

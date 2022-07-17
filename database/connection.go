@@ -29,13 +29,14 @@ func GetConnection(id string) (connection *model.Connection, status int) {
 func ParseUserConnection(username string, connection *model.Connection) (userConnection *model.UserConnection, success bool) {
 	userConnection = &model.UserConnection{
 		ID:        connection.ID,
-		Debt:      connection.Debt,
 		CreatedAt: connection.CreatedAt,
 	}
 	if connection.Username1 == username {
 		userConnection.ContactUsername = connection.Username2
+		userConnection.Debt = connection.Debt
 	} else if connection.Username2 == username {
 		userConnection.ContactUsername = connection.Username1
+		userConnection.Debt = -connection.Debt
 	} else {
 		return
 	}
@@ -181,7 +182,11 @@ func ConnectionUser2(ctx context.Context, obj *model.Connection) (*model.User, e
 }
 
 func UserConnectionContact(ctx context.Context, obj *model.UserConnection) (*model.User, error) {
-	contact, status := GetUser(obj.ContactUsername)
+	return GetUserConnectionContact(obj.ContactUsername)
+}
+
+func GetUserConnectionContact(contactUsername string) (*model.User, error) {
+	contact, status := GetUser(contactUsername)
 	if status == 404 {
 		return nil, errors.New("user not found")
 	} else if status == 400 {

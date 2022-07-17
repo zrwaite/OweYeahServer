@@ -34,8 +34,8 @@ func ConnectToMongoDB() {
 	}
 	fmt.Println(databases)
 	if settings.DEV {
-		mongoDatabase = client.Database("CluelessCartelDevelopmentCluster")
+		mongoDatabase = client.Database("OweMateDevelopmentCluster")
 	} else {
-		mongoDatabase = client.Database("CluelessCartelProductionCluster")
+		mongoDatabase = client.Database("OweMateProductionCluster")
 	}
 }
