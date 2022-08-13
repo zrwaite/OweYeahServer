@@ -1,5 +1,5 @@
-# Owemate
+# OweYeah Server
 
-Go Graphql API for OweMate group debt tracking app
+Go Graphql API for OweYeah group debt tracking app
 
-Connected to React Native App by Greyson Martyn [OweMate](https://github.com/greyson4790/OweMate)
+Connected to React Native App by Greyson Martyn [OweYeah](https://github.com/greyson4790/OweMate)
