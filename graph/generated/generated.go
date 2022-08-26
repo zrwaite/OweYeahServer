@@ -15,7 +15,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/introspection"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
-	"github.com/zrwaite/OweMate/graph/model"
+	"github.com/zrwaite/OweYeah/graph/model"
 )
 
 // region    ************************** generated!.gotpl **************************
@@ -922,7 +922,7 @@ func (ec *executionContext) field_Mutation_createInvoice_args(ctx context.Contex
 	var arg0 model.InvoiceOrPaymentInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNInvoiceOrPaymentInput2githubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐInvoiceOrPaymentInput(ctx, tmp)
+		arg0, err = ec.unmarshalNInvoiceOrPaymentInput2githubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐInvoiceOrPaymentInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -937,7 +937,7 @@ func (ec *executionContext) field_Mutation_createPayment_args(ctx context.Contex
 	var arg0 model.InvoiceOrPaymentInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNInvoiceOrPaymentInput2githubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐInvoiceOrPaymentInput(ctx, tmp)
+		arg0, err = ec.unmarshalNInvoiceOrPaymentInput2githubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐInvoiceOrPaymentInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -952,7 +952,7 @@ func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, 
 	var arg0 model.UserInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUserInput2githubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUserInput(ctx, tmp)
+		arg0, err = ec.unmarshalNUserInput2githubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUserInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -982,7 +982,7 @@ func (ec *executionContext) field_Mutation_login_args(ctx context.Context, rawAr
 	var arg0 model.UserInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUserInput2githubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUserInput(ctx, tmp)
+		arg0, err = ec.unmarshalNUserInput2githubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUserInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1190,7 +1190,7 @@ func (ec *executionContext) _Connection_user1(ctx context.Context, field graphql
 	}
 	res := resTmp.(*model.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Connection_user1(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1302,7 +1302,7 @@ func (ec *executionContext) _Connection_user2(ctx context.Context, field graphql
 	}
 	res := resTmp.(*model.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Connection_user2(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1499,7 +1499,7 @@ func (ec *executionContext) _ConnectionResult_connection(ctx context.Context, fi
 	}
 	res := resTmp.(*model.Connection)
 	fc.Result = res
-	return ec.marshalOConnection2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐConnection(ctx, field.Selections, res)
+	return ec.marshalOConnection2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_ConnectionResult_connection(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1688,7 +1688,7 @@ func (ec *executionContext) _InvoiceOrPayment_createdBy(ctx context.Context, fie
 	}
 	res := resTmp.(*model.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_InvoiceOrPayment_createdBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1800,7 +1800,7 @@ func (ec *executionContext) _InvoiceOrPayment_connection(ctx context.Context, fi
 	}
 	res := resTmp.(*model.Connection)
 	fc.Result = res
-	return ec.marshalNConnection2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐConnection(ctx, field.Selections, res)
+	return ec.marshalNConnection2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_InvoiceOrPayment_connection(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1989,7 +1989,7 @@ func (ec *executionContext) _InvoiceResult_invoice(ctx context.Context, field gr
 	}
 	res := resTmp.(*model.InvoiceOrPayment)
 	fc.Result = res
-	return ec.marshalOInvoiceOrPayment2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐInvoiceOrPayment(ctx, field.Selections, res)
+	return ec.marshalOInvoiceOrPayment2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐInvoiceOrPayment(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_InvoiceResult_invoice(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2090,7 +2090,7 @@ func (ec *executionContext) _Mutation_createUser(ctx context.Context, field grap
 	}
 	res := resTmp.(*model.UserAuthResult)
 	fc.Result = res
-	return ec.marshalNUserAuthResult2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUserAuthResult(ctx, field.Selections, res)
+	return ec.marshalNUserAuthResult2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUserAuthResult(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createUser(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2155,7 +2155,7 @@ func (ec *executionContext) _Mutation_login(ctx context.Context, field graphql.C
 	}
 	res := resTmp.(*model.UserAuthResult)
 	fc.Result = res
-	return ec.marshalNUserAuthResult2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUserAuthResult(ctx, field.Selections, res)
+	return ec.marshalNUserAuthResult2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUserAuthResult(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_login(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2220,7 +2220,7 @@ func (ec *executionContext) _Mutation_deleteUser(ctx context.Context, field grap
 	}
 	res := resTmp.(*model.Result)
 	fc.Result = res
-	return ec.marshalNResult2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐResult(ctx, field.Selections, res)
+	return ec.marshalNResult2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐResult(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_deleteUser(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2281,7 +2281,7 @@ func (ec *executionContext) _Mutation_createConnection(ctx context.Context, fiel
 	}
 	res := resTmp.(*model.ConnectionResult)
 	fc.Result = res
-	return ec.marshalNConnectionResult2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐConnectionResult(ctx, field.Selections, res)
+	return ec.marshalNConnectionResult2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐConnectionResult(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createConnection(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2344,7 +2344,7 @@ func (ec *executionContext) _Mutation_createInvoice(ctx context.Context, field g
 	}
 	res := resTmp.(*model.InvoiceResult)
 	fc.Result = res
-	return ec.marshalNInvoiceResult2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐInvoiceResult(ctx, field.Selections, res)
+	return ec.marshalNInvoiceResult2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐInvoiceResult(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createInvoice(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2407,7 +2407,7 @@ func (ec *executionContext) _Mutation_createPayment(ctx context.Context, field g
 	}
 	res := resTmp.(*model.PaymentResult)
 	fc.Result = res
-	return ec.marshalNPaymentResult2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐPaymentResult(ctx, field.Selections, res)
+	return ec.marshalNPaymentResult2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐPaymentResult(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createPayment(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2646,7 +2646,7 @@ func (ec *executionContext) _PartialUser_connections(ctx context.Context, field 
 	}
 	res := resTmp.([]*model.Connection)
 	fc.Result = res
-	return ec.marshalNConnection2ᚕᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐConnectionᚄ(ctx, field.Selections, res)
+	return ec.marshalNConnection2ᚕᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐConnectionᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_PartialUser_connections(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2791,7 +2791,7 @@ func (ec *executionContext) _PaymentResult_payment(ctx context.Context, field gr
 	}
 	res := resTmp.(*model.InvoiceOrPayment)
 	fc.Result = res
-	return ec.marshalOInvoiceOrPayment2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐInvoiceOrPayment(ctx, field.Selections, res)
+	return ec.marshalOInvoiceOrPayment2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐInvoiceOrPayment(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_PaymentResult_payment(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2892,7 +2892,7 @@ func (ec *executionContext) _Query_user(ctx context.Context, field graphql.Colle
 	}
 	res := resTmp.(*model.UserResult)
 	fc.Result = res
-	return ec.marshalNUserResult2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUserResult(ctx, field.Selections, res)
+	return ec.marshalNUserResult2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUserResult(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_user(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2955,7 +2955,7 @@ func (ec *executionContext) _Query_getFilteredUsers(ctx context.Context, field g
 	}
 	res := resTmp.(*model.UsersResult)
 	fc.Result = res
-	return ec.marshalNUsersResult2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUsersResult(ctx, field.Selections, res)
+	return ec.marshalNUsersResult2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUsersResult(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_getFilteredUsers(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -3496,7 +3496,7 @@ func (ec *executionContext) _User_invoices(ctx context.Context, field graphql.Co
 	}
 	res := resTmp.([]*model.InvoiceOrPayment)
 	fc.Result = res
-	return ec.marshalNInvoiceOrPayment2ᚕᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐInvoiceOrPaymentᚄ(ctx, field.Selections, res)
+	return ec.marshalNInvoiceOrPayment2ᚕᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐInvoiceOrPaymentᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_User_invoices(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -3600,7 +3600,7 @@ func (ec *executionContext) _User_payments(ctx context.Context, field graphql.Co
 	}
 	res := resTmp.([]*model.InvoiceOrPayment)
 	fc.Result = res
-	return ec.marshalNInvoiceOrPayment2ᚕᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐInvoiceOrPaymentᚄ(ctx, field.Selections, res)
+	return ec.marshalNInvoiceOrPayment2ᚕᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐInvoiceOrPaymentᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_User_payments(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -3704,7 +3704,7 @@ func (ec *executionContext) _User_connections(ctx context.Context, field graphql
 	}
 	res := resTmp.([]*model.UserConnection)
 	fc.Result = res
-	return ec.marshalNUserConnection2ᚕᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUserConnectionᚄ(ctx, field.Selections, res)
+	return ec.marshalNUserConnection2ᚕᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUserConnectionᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_User_connections(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -3801,7 +3801,7 @@ func (ec *executionContext) _UserAuthResult_user(ctx context.Context, field grap
 	}
 	res := resTmp.(*model.User)
 	fc.Result = res
-	return ec.marshalOUser2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalOUser2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_UserAuthResult_user(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4042,7 +4042,7 @@ func (ec *executionContext) _UserConnection_contact(ctx context.Context, field g
 	}
 	res := resTmp.(*model.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_UserConnection_contact(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4239,7 +4239,7 @@ func (ec *executionContext) _UserResult_user(ctx context.Context, field graphql.
 	}
 	res := resTmp.(*model.User)
 	fc.Result = res
-	return ec.marshalOUser2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalOUser2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_UserResult_user(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4389,7 +4389,7 @@ func (ec *executionContext) _UsersResult_users(ctx context.Context, field graphq
 	}
 	res := resTmp.([]*model.User)
 	fc.Result = res
-	return ec.marshalOUser2ᚕᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUserᚄ(ctx, field.Selections, res)
+	return ec.marshalOUser2ᚕᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUserᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_UsersResult_users(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7529,11 +7529,11 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) marshalNConnection2githubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐConnection(ctx context.Context, sel ast.SelectionSet, v model.Connection) graphql.Marshaler {
+func (ec *executionContext) marshalNConnection2githubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐConnection(ctx context.Context, sel ast.SelectionSet, v model.Connection) graphql.Marshaler {
 	return ec._Connection(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNConnection2ᚕᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐConnectionᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Connection) graphql.Marshaler {
+func (ec *executionContext) marshalNConnection2ᚕᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐConnectionᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Connection) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -7557,7 +7557,7 @@ func (ec *executionContext) marshalNConnection2ᚕᚖgithubᚗcomᚋzrwaiteᚋOw
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNConnection2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐConnection(ctx, sel, v[i])
+			ret[i] = ec.marshalNConnection2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐConnection(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -7577,7 +7577,7 @@ func (ec *executionContext) marshalNConnection2ᚕᚖgithubᚗcomᚋzrwaiteᚋOw
 	return ret
 }
 
-func (ec *executionContext) marshalNConnection2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐConnection(ctx context.Context, sel ast.SelectionSet, v *model.Connection) graphql.Marshaler {
+func (ec *executionContext) marshalNConnection2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐConnection(ctx context.Context, sel ast.SelectionSet, v *model.Connection) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -7587,11 +7587,11 @@ func (ec *executionContext) marshalNConnection2ᚖgithubᚗcomᚋzrwaiteᚋOweMa
 	return ec._Connection(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNConnectionResult2githubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐConnectionResult(ctx context.Context, sel ast.SelectionSet, v model.ConnectionResult) graphql.Marshaler {
+func (ec *executionContext) marshalNConnectionResult2githubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐConnectionResult(ctx context.Context, sel ast.SelectionSet, v model.ConnectionResult) graphql.Marshaler {
 	return ec._ConnectionResult(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNConnectionResult2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐConnectionResult(ctx context.Context, sel ast.SelectionSet, v *model.ConnectionResult) graphql.Marshaler {
+func (ec *executionContext) marshalNConnectionResult2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐConnectionResult(ctx context.Context, sel ast.SelectionSet, v *model.ConnectionResult) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -7663,7 +7663,7 @@ func (ec *executionContext) marshalNID2ᚕstringᚄ(ctx context.Context, sel ast
 	return ret
 }
 
-func (ec *executionContext) marshalNInvoiceOrPayment2ᚕᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐInvoiceOrPaymentᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.InvoiceOrPayment) graphql.Marshaler {
+func (ec *executionContext) marshalNInvoiceOrPayment2ᚕᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐInvoiceOrPaymentᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.InvoiceOrPayment) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -7687,7 +7687,7 @@ func (ec *executionContext) marshalNInvoiceOrPayment2ᚕᚖgithubᚗcomᚋzrwait
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNInvoiceOrPayment2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐInvoiceOrPayment(ctx, sel, v[i])
+			ret[i] = ec.marshalNInvoiceOrPayment2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐInvoiceOrPayment(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -7707,7 +7707,7 @@ func (ec *executionContext) marshalNInvoiceOrPayment2ᚕᚖgithubᚗcomᚋzrwait
 	return ret
 }
 
-func (ec *executionContext) marshalNInvoiceOrPayment2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐInvoiceOrPayment(ctx context.Context, sel ast.SelectionSet, v *model.InvoiceOrPayment) graphql.Marshaler {
+func (ec *executionContext) marshalNInvoiceOrPayment2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐInvoiceOrPayment(ctx context.Context, sel ast.SelectionSet, v *model.InvoiceOrPayment) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -7717,16 +7717,16 @@ func (ec *executionContext) marshalNInvoiceOrPayment2ᚖgithubᚗcomᚋzrwaite�
 	return ec._InvoiceOrPayment(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNInvoiceOrPaymentInput2githubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐInvoiceOrPaymentInput(ctx context.Context, v interface{}) (model.InvoiceOrPaymentInput, error) {
+func (ec *executionContext) unmarshalNInvoiceOrPaymentInput2githubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐInvoiceOrPaymentInput(ctx context.Context, v interface{}) (model.InvoiceOrPaymentInput, error) {
 	res, err := ec.unmarshalInputInvoiceOrPaymentInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNInvoiceResult2githubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐInvoiceResult(ctx context.Context, sel ast.SelectionSet, v model.InvoiceResult) graphql.Marshaler {
+func (ec *executionContext) marshalNInvoiceResult2githubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐInvoiceResult(ctx context.Context, sel ast.SelectionSet, v model.InvoiceResult) graphql.Marshaler {
 	return ec._InvoiceResult(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNInvoiceResult2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐInvoiceResult(ctx context.Context, sel ast.SelectionSet, v *model.InvoiceResult) graphql.Marshaler {
+func (ec *executionContext) marshalNInvoiceResult2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐInvoiceResult(ctx context.Context, sel ast.SelectionSet, v *model.InvoiceResult) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -7736,11 +7736,11 @@ func (ec *executionContext) marshalNInvoiceResult2ᚖgithubᚗcomᚋzrwaiteᚋOw
 	return ec._InvoiceResult(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNPaymentResult2githubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐPaymentResult(ctx context.Context, sel ast.SelectionSet, v model.PaymentResult) graphql.Marshaler {
+func (ec *executionContext) marshalNPaymentResult2githubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐPaymentResult(ctx context.Context, sel ast.SelectionSet, v model.PaymentResult) graphql.Marshaler {
 	return ec._PaymentResult(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNPaymentResult2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐPaymentResult(ctx context.Context, sel ast.SelectionSet, v *model.PaymentResult) graphql.Marshaler {
+func (ec *executionContext) marshalNPaymentResult2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐPaymentResult(ctx context.Context, sel ast.SelectionSet, v *model.PaymentResult) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -7750,11 +7750,11 @@ func (ec *executionContext) marshalNPaymentResult2ᚖgithubᚗcomᚋzrwaiteᚋOw
 	return ec._PaymentResult(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNResult2githubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐResult(ctx context.Context, sel ast.SelectionSet, v model.Result) graphql.Marshaler {
+func (ec *executionContext) marshalNResult2githubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐResult(ctx context.Context, sel ast.SelectionSet, v model.Result) graphql.Marshaler {
 	return ec._Result(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNResult2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐResult(ctx context.Context, sel ast.SelectionSet, v *model.Result) graphql.Marshaler {
+func (ec *executionContext) marshalNResult2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐResult(ctx context.Context, sel ast.SelectionSet, v *model.Result) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -7779,11 +7779,11 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
-func (ec *executionContext) marshalNUser2githubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v model.User) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2githubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v model.User) graphql.Marshaler {
 	return ec._User(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *model.User) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *model.User) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -7793,11 +7793,11 @@ func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋg
 	return ec._User(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNUserAuthResult2githubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUserAuthResult(ctx context.Context, sel ast.SelectionSet, v model.UserAuthResult) graphql.Marshaler {
+func (ec *executionContext) marshalNUserAuthResult2githubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUserAuthResult(ctx context.Context, sel ast.SelectionSet, v model.UserAuthResult) graphql.Marshaler {
 	return ec._UserAuthResult(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNUserAuthResult2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUserAuthResult(ctx context.Context, sel ast.SelectionSet, v *model.UserAuthResult) graphql.Marshaler {
+func (ec *executionContext) marshalNUserAuthResult2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUserAuthResult(ctx context.Context, sel ast.SelectionSet, v *model.UserAuthResult) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -7807,7 +7807,7 @@ func (ec *executionContext) marshalNUserAuthResult2ᚖgithubᚗcomᚋzrwaiteᚋO
 	return ec._UserAuthResult(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNUserConnection2ᚕᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUserConnectionᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.UserConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNUserConnection2ᚕᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUserConnectionᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.UserConnection) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -7831,7 +7831,7 @@ func (ec *executionContext) marshalNUserConnection2ᚕᚖgithubᚗcomᚋzrwaite�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNUserConnection2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUserConnection(ctx, sel, v[i])
+			ret[i] = ec.marshalNUserConnection2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUserConnection(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -7851,7 +7851,7 @@ func (ec *executionContext) marshalNUserConnection2ᚕᚖgithubᚗcomᚋzrwaite�
 	return ret
 }
 
-func (ec *executionContext) marshalNUserConnection2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUserConnection(ctx context.Context, sel ast.SelectionSet, v *model.UserConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNUserConnection2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUserConnection(ctx context.Context, sel ast.SelectionSet, v *model.UserConnection) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -7861,16 +7861,16 @@ func (ec *executionContext) marshalNUserConnection2ᚖgithubᚗcomᚋzrwaiteᚋO
 	return ec._UserConnection(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNUserInput2githubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUserInput(ctx context.Context, v interface{}) (model.UserInput, error) {
+func (ec *executionContext) unmarshalNUserInput2githubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUserInput(ctx context.Context, v interface{}) (model.UserInput, error) {
 	res, err := ec.unmarshalInputUserInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNUserResult2githubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUserResult(ctx context.Context, sel ast.SelectionSet, v model.UserResult) graphql.Marshaler {
+func (ec *executionContext) marshalNUserResult2githubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUserResult(ctx context.Context, sel ast.SelectionSet, v model.UserResult) graphql.Marshaler {
 	return ec._UserResult(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNUserResult2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUserResult(ctx context.Context, sel ast.SelectionSet, v *model.UserResult) graphql.Marshaler {
+func (ec *executionContext) marshalNUserResult2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUserResult(ctx context.Context, sel ast.SelectionSet, v *model.UserResult) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -7880,11 +7880,11 @@ func (ec *executionContext) marshalNUserResult2ᚖgithubᚗcomᚋzrwaiteᚋOweMa
 	return ec._UserResult(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNUsersResult2githubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUsersResult(ctx context.Context, sel ast.SelectionSet, v model.UsersResult) graphql.Marshaler {
+func (ec *executionContext) marshalNUsersResult2githubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUsersResult(ctx context.Context, sel ast.SelectionSet, v model.UsersResult) graphql.Marshaler {
 	return ec._UsersResult(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNUsersResult2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUsersResult(ctx context.Context, sel ast.SelectionSet, v *model.UsersResult) graphql.Marshaler {
+func (ec *executionContext) marshalNUsersResult2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUsersResult(ctx context.Context, sel ast.SelectionSet, v *model.UsersResult) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -8173,14 +8173,14 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return res
 }
 
-func (ec *executionContext) marshalOConnection2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐConnection(ctx context.Context, sel ast.SelectionSet, v *model.Connection) graphql.Marshaler {
+func (ec *executionContext) marshalOConnection2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐConnection(ctx context.Context, sel ast.SelectionSet, v *model.Connection) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Connection(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOInvoiceOrPayment2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐInvoiceOrPayment(ctx context.Context, sel ast.SelectionSet, v *model.InvoiceOrPayment) graphql.Marshaler {
+func (ec *executionContext) marshalOInvoiceOrPayment2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐInvoiceOrPayment(ctx context.Context, sel ast.SelectionSet, v *model.InvoiceOrPayment) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -8241,7 +8241,7 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	return res
 }
 
-func (ec *executionContext) marshalOUser2ᚕᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUserᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.User) graphql.Marshaler {
+func (ec *executionContext) marshalOUser2ᚕᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUserᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.User) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -8268,7 +8268,7 @@ func (ec *executionContext) marshalOUser2ᚕᚖgithubᚗcomᚋzrwaiteᚋOweMate�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNUser2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUser(ctx, sel, v[i])
+			ret[i] = ec.marshalNUser2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUser(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -8288,7 +8288,7 @@ func (ec *executionContext) marshalOUser2ᚕᚖgithubᚗcomᚋzrwaiteᚋOweMate�
 	return ret
 }
 
-func (ec *executionContext) marshalOUser2ᚖgithubᚗcomᚋzrwaiteᚋOweMateᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *model.User) graphql.Marshaler {
+func (ec *executionContext) marshalOUser2ᚖgithubᚗcomᚋzrwaiteᚋOweYeahᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *model.User) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}

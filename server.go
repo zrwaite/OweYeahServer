@@ -8,10 +8,10 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/joho/godotenv"
-	"github.com/zrwaite/OweMate/database"
-	"github.com/zrwaite/OweMate/graph"
-	"github.com/zrwaite/OweMate/graph/generated"
-	"github.com/zrwaite/OweMate/settings"
+	"github.com/zrwaite/OweYeah/database"
+	"github.com/zrwaite/OweYeah/graph"
+	"github.com/zrwaite/OweYeah/graph/generated"
+	"github.com/zrwaite/OweYeah/settings"
 )
 
 const defaultPort = "8080"

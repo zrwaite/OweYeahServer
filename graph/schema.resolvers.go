@@ -6,9 +6,9 @@ package graph
 import (
 	"context"
 
-	"github.com/zrwaite/OweMate/database"
-	"github.com/zrwaite/OweMate/graph/generated"
-	"github.com/zrwaite/OweMate/graph/model"
+	"github.com/zrwaite/OweYeah/database"
+	"github.com/zrwaite/OweYeah/graph/generated"
+	"github.com/zrwaite/OweYeah/graph/model"
 )
 
 func (r *connectionResolver) User1(ctx context.Context, obj *model.Connection) (*model.User, error) {

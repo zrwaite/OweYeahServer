@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/zrwaite/OweMate/graph/model"
+	"github.com/zrwaite/OweYeah/graph/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )

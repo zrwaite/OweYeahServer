@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/zrwaite/OweMate/graph/model"
-	"github.com/zrwaite/OweMate/utils"
+	"github.com/zrwaite/OweYeah/graph/model"
+	"github.com/zrwaite/OweYeah/utils"
 )
 
 func ResolveCycles(user *model.User, connection *model.UserConnection) (err error) {

@@ -1,4 +1,4 @@
-module github.com/zrwaite/OweMate
+module github.com/zrwaite/OweYeah
 
 go 1.18
 

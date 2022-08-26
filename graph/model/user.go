@@ -1,6 +1,6 @@
 package model
 
-import "github.com/zrwaite/OweMate/auth"
+import "github.com/zrwaite/OweYeah/auth"
 
 type User struct {
 	ID            string              `bson:"id"`

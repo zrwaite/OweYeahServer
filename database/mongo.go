@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/zrwaite/OweMate/settings"
+	"github.com/zrwaite/OweYeah/settings"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -34,8 +34,8 @@ func ConnectToMongoDB() {
 	}
 	fmt.Println(databases)
 	if settings.DEV {
-		mongoDatabase = client.Database("OweMateDevelopmentCluster")
+		mongoDatabase = client.Database("OweYeahDevelopmentCluster")
 	} else {
-		mongoDatabase = client.Database("OweMateProductionCluster")
+		mongoDatabase = client.Database("OweYeahProductionCluster")
 	}
 }

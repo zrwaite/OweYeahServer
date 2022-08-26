@@ -3,7 +3,7 @@ package tests
 import (
 	"testing"
 
-	"github.com/zrwaite/OweMate/terminal"
+	"github.com/zrwaite/OweYeah/terminal"
 )
 
 func PrintErr(t *testing.T, err string) {

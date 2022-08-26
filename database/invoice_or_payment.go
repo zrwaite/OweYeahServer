@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/zrwaite/OweMate/graph/model"
+	"github.com/zrwaite/OweYeah/graph/model"
 )
 
 func InvoiceOrPaymentConnection(ctx context.Context, obj *model.InvoiceOrPayment) (*model.Connection, error) {

@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/zrwaite/OweMate/utils"
+	"github.com/zrwaite/OweYeah/utils"
 )
 
 type SearchTest struct {

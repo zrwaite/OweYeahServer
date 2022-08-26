@@ -1,6 +1,6 @@
 package utils
 
-import "github.com/zrwaite/OweMate/graph/model"
+import "github.com/zrwaite/OweYeah/graph/model"
 
 func GenericBinarySearch[V *model.User | GTLTType](list []V, item V, gt func(a, b V) bool, lt func(a, b V) bool) (found bool, index int) {
 	startIndex := 0
